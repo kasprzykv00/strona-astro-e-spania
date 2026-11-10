@@ -1,0 +1,70 @@
+---
+import { url, sekcja } from '../utils/url.js';
+---
+<header class="site-header fixed-top">
+  <nav class="navbar navbar-expand-xl site-nav" aria-label="Nawigacja główna">
+    <div class="container-fluid site-nav__inner">
+      <a class="navbar-brand site-nav__brand" href={url()} data-action="scroll-top" aria-label="e-spania — strona główna">
+        <img class="site-nav__logo site-nav__logo--light" src={url('assets/logo/logo-light.png')} alt="e-spania" width="479" height="270">
+        <img class="site-nav__logo site-nav__logo--dark" src={url('assets/logo/logo-dark.png')} alt="e-spania" width="479" height="270">
+      </a>
+
+      <div class="offcanvas offcanvas-end site-menu" tabindex="-1" id="siteMenu" aria-labelledby="siteMenuLabel" data-bs-backdrop="false">
+        <div class="offcanvas-header site-menu__header">
+          <p class="offcanvas-title site-menu__title" id="siteMenuLabel">Menu</p>
+          <button type="button" class="btn text-btn" data-bs-dismiss="offcanvas">
+            <svg class="icon" aria-hidden="true"><use href="#i-close"/></svg>
+            <span>Zamknij</span>
+          </button>
+        </div>
+        <div class="offcanvas-body site-menu__body">
+          <ul class="navbar-nav site-menu__list mx-xl-auto">
+            <li class="nav-item"><a class="nav-link site-menu__link" href={sekcja('hotel', Astro.url.pathname)}>Hotel</a></li>
+            <li class="nav-item"><a class="nav-link site-menu__link" href={sekcja('pokoje', Astro.url.pathname)}>Pokoje</a></li>
+            <li class="nav-item"><a class="nav-link site-menu__link" href={sekcja('doswiadczenia', Astro.url.pathname)}>Doświadczenia</a></li>
+            <li class="nav-item"><a class="nav-link site-menu__link" href={sekcja('galeria', Astro.url.pathname)}>Galeria</a></li>
+            <li class="nav-item"><a class="nav-link site-menu__link" href={sekcja('opinie', Astro.url.pathname)}>Opinie</a></li>
+            <li class="nav-item"><a class="nav-link site-menu__link" href={sekcja('kontakt', Astro.url.pathname)}>Kontakt</a></li>
+            <li class="nav-item"><a class="nav-link site-menu__link site-menu__link--featured site-menu__link--divider" href={url('sklep/')}>Sklep</a></li>
+            <li class="nav-item"><a class="nav-link site-menu__link site-menu__link--featured" href={url('blog/')}>Blog</a></li>
+          </ul>
+          <div class="site-menu__foot d-xl-none">
+            <div class="site-menu__langs d-sm-none" role="group" aria-label="Język strony">
+              <button class="btn lang-switch__item site-menu__lang" type="button" lang="pl" data-lang="pl" aria-current="true">PL</button>
+              <button class="btn lang-switch__item site-menu__lang" type="button" lang="en" data-lang="en" aria-label="English">EN</button>
+              <button class="btn lang-switch__item site-menu__lang" type="button" lang="es" data-lang="es" aria-label="Español">ES</button>
+            </div>
+            <p class="site-menu__note">Barcelona · Malaga · Madryt</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="site-nav__actions d-flex align-items-center">
+        <div class="dropdown lang-switch d-none d-sm-block">
+          <button class="btn lang-switch__toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="PL — wybierz język strony">
+            <span>PL</span>
+            <svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron-down"/></svg>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end lang-switch__menu">
+            <li><button class="dropdown-item lang-switch__item active" type="button" lang="pl" data-lang="pl" aria-current="true">Polski</button></li>
+            <li><button class="dropdown-item lang-switch__item" type="button" lang="en" data-lang="en">English</button></li>
+            <li><button class="dropdown-item lang-switch__item" type="button" lang="es" data-lang="es">Español</button></li>
+          </ul>
+        </div>
+
+        <a class="icon-btn nav-icon" href={url('konto/')} aria-label="Konto użytkownika"><i class="bi bi-person" aria-hidden="true"></i></a>
+        <a class="icon-btn nav-icon" href={url('koszyk/')} aria-label="Koszyk, liczba produktów: 2">
+          <i class="bi bi-cart" aria-hidden="true"></i>
+          <span class="badge nav-badge" aria-hidden="true" data-cart-count>2</span>
+        </a>
+
+        <a class="btn btn-accent btn-book" href={sekcja('rezerwacja', Astro.url.pathname)} data-action="focus-booking">Rezerwuj</a>
+
+        <button class="navbar-toggler icon-btn site-nav__toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#siteMenu" aria-controls="siteMenu" aria-label="Otwórz menu">
+          <svg class="icon" aria-hidden="true"><use href="#i-menu"/></svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+  <span class="scroll-progress" aria-hidden="true"></span>
+</header>

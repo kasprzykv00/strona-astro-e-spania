@@ -1,0 +1,43 @@
+---
+import { url, sekcja } from '../utils/url.js';
+---
+<footer class="site-footer" id="kontakt">
+  <div class="container">
+    <div class="row gy-5">
+      <div class="col-lg-4">
+        <img class="site-footer__logo" src={url('assets/logo/logo-light.png')} width="479" height="270" loading="lazy" alt="e-spania — es hotels">
+        <p class="site-footer__claim">Hotele w Barcelonie, Maladze i Madrycie. Spokojny rytm, jasne wnętrza i hiszpańskie światło.</p>
+      </div>
+      <div class="col-6 col-md-4 col-lg-2 offset-lg-1">
+        <h2 class="site-footer__heading">Odkryj</h2>
+        <ul class="site-footer__list">
+          <li><a href={sekcja('hotel', Astro.url.pathname)}>Hotel</a></li>
+          <li><a href={sekcja('pokoje', Astro.url.pathname)}>Pokoje</a></li>
+          <li><a href={sekcja('doswiadczenia', Astro.url.pathname)}>Doświadczenia</a></li>
+          <li><a href={sekcja('galeria', Astro.url.pathname)}>Galeria</a></li>
+          <li><a href={sekcja('opinie', Astro.url.pathname)}>Opinie</a></li>
+          <li><a href={url('sklep/')}>Sklep</a></li>
+          <li><a href={url('konto/')}>Moje konto</a></li>
+          <li><a href={url('blog/')}>Blog</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-md-4 col-lg-3">
+        <h2 class="site-footer__heading">Kontakt</h2>
+        <address class="site-footer__list site-footer__address">
+          <span data-city="address">Passeig de la Llum 12, 08003 Barcelona</span>
+          <a href="tel:+34900000123">+34&nbsp;900&nbsp;000&nbsp;123</a>
+          <a href="mailto:kontakt@e-spania.example">kontakt@e-spania.example</a>
+        </address>
+      </div>
+      <div class="col-md-4 col-lg-2">
+        <h2 class="site-footer__heading">Rezerwacja</h2>
+        <p class="site-footer__small">Sprawdź termin w kilka sekund.</p>
+        <a class="btn btn-ghost" href={sekcja('rezerwacja', Astro.url.pathname)} data-action="focus-booking">Rezerwuj</a>
+      </div>
+    </div>
+    <div class="site-footer__bottom d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+      <p class="mb-0">© 2026 e-spania · Projekt na Responsive Web Design: Oskar Kasprzyk, Dawid Jajko, Krystian Jałocha</p>
+      <p class="mb-0">Zdjęcia: <a href="https://www.pexels.com/" target="_blank" rel="noopener">Pexels<span class="visually-hidden"> (otwiera się w nowej karcie)</span></a> · <a href={url()} data-action="scroll-top">Do góry</a></p>
+    </div>
+  </div>
+</footer>
