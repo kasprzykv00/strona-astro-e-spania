@@ -1,0 +1,179 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { url, abs } from '../../utils/url.js';
+import { getCollection } from 'astro:content';
+import ProductCard from '../../components/ProductCard.astro';
+import { plural } from '../../utils/format.js';
+
+// Wszystkie produkty z plików src/content/products/*.md, od najpopularniejszych
+// (filtry, sortowanie i strony katalogu obsługuje js/shop.js)
+const products = (await getCollection('products')).sort((a, b) => b.data.popularity - a.data.popularity);
+
+// Dane strukturalne: lista produktów (dla wyszukiwarek)
+const schema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'CollectionPage',
+      name: 'Sklep hotelowy e-spania',
+      description: 'Sklep hotelowy e-spania: ręczniki, ceramika, świece, oliwa i vouchery podarunkowe. Rzeczy, które znasz z pobytu w Barcelonie, Maladze i Madrycie.',
+      url: abs('sklep/'),
+      inLanguage: 'pl',
+      mainEntity: {
+        '@type': 'ItemList',
+        numberOfItems: products.length,
+        itemListElement: [...products].sort((a, b) => a.data.order - b.data.order).map((product, i) => ({
+          '@type': 'ListItem', position: i + 1, url: abs(`sklep/${product.id}/`), name: product.data.name,
+        })),
+      },
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Strona główna', item: abs() },
+        { '@type': 'ListItem', position: 2, name: 'Sklep', item: abs('sklep/') },
+      ],
+    },
+  ],
+};
+---
+<Layout title="Sklep hotelowy — ceramika, ręczniki, świece i vouchery | e-spania" page="sklep">
+  <Fragment slot="head">
+    <meta name="description" content="Sklep hotelowy e-spania: ręczniki, ceramika, świece, oliwa i vouchery podarunkowe. Rzeczy, które znasz z pobytu w Barcelonie, Maladze i Madrycie.">
+
+    <!-- Open Graph: pełne adresy strony na GitHub Pages (https://kasprzykv00.github.io/strona-astro-e-spania/). -->
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="pl_PL">
+    <meta property="og:site_name" content="e-spania">
+    <meta property="og:title" content="Sklep hotelowy e-spania">
+    <meta property="og:description" content="Sklep hotelowy e-spania: ręczniki, ceramika, świece, oliwa i vouchery podarunkowe. Rzeczy, które znasz z pobytu w Barcelonie, Maladze i Madrycie.">
+    <meta property="og:url" content="https://kasprzykv00.github.io/strona-astro-e-spania/sklep/">
+    <meta property="og:image" content="https://kasprzykv00.github.io/strona-astro-e-spania/assets/images/sklep/og-sklep.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Złożone ręczniki w piaskowe i granatowe pasy">
+
+    <link rel="preload" as="image" href={url('assets/images/sklep/sklep-header-960.webp')} imagesrcset={`${url('assets/images/sklep/sklep-header-960.webp')} 960w, ${url('assets/images/sklep/sklep-header-1600.webp')} 1600w`} imagesizes="100vw">
+
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)}></script>
+  </Fragment>
+
+  <section class="page-header" aria-labelledby="page-title">
+    <img class="page-header__image" src={url('assets/images/sklep/sklep-header-960.webp')} srcset={`${url('assets/images/sklep/sklep-header-960.webp')} 960w, ${url('assets/images/sklep/sklep-header-1600.webp')} 1600w`} sizes="100vw" width="1600" height="1067" fetchpriority="high" alt="Stos złożonych ręczników w piaskowe i granatowe pasy">
+    <div class="page-header__shade" aria-hidden="true"></div>
+    <div class="container page-header__inner">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb blog-breadcrumb">
+          <li class="breadcrumb-item"><a href={url()}>Strona główna</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Sklep</li>
+        </ol>
+      </nav>
+      <h1 class="page-header__title" id="page-title" data-reveal data-split>Sklep: <em>Hiszpania w domu</em></h1>
+      <p class="page-header__text">Rzeczy, które znasz z naszych hoteli. Ceramika ze stołu śniadaniowego, ręczniki na plażę, zapach kwiatu pomarańczy i vouchery na kolejny pobyt.</p>
+    </div>
+  </section>
+
+  <div class="container shop-layout">
+    <div class="row gx-lg-5">
+
+      <aside class="col-lg-3" aria-label="Filtry produktów">
+        <div class="offcanvas-lg offcanvas-start shop-filters" tabindex="-1" id="shopFilters" aria-labelledby="shopFiltersTitle">
+          <div class="offcanvas-header shop-filters__header">
+            <h2 class="shop-filters__title" id="shopFiltersTitle">Filtry</h2>
+            <button type="button" class="btn text-btn d-lg-none" data-bs-dismiss="offcanvas" data-bs-target="#shopFilters">
+              <i class="bi bi-x-lg" aria-hidden="true"></i>
+              <span>Zamknij</span>
+            </button>
+          </div>
+          <div class="offcanvas-body shop-filters__body">
+            <form id="shopFilterForm">
+              <fieldset class="shop-filter">
+                <legend class="sidebar-block__title">Kategoria</legend>
+                <div class="form-check shop-check"><input class="form-check-input" type="checkbox" data-group="category" id="f-category-dom" value="dom"><label class="form-check-label" for="f-category-dom">Dom i stół</label></div>
+                <div class="form-check shop-check"><input class="form-check-input" type="checkbox" data-group="category" id="f-category-plaza" value="plaza"><label class="form-check-label" for="f-category-plaza">Plaża i lato</label></div>
+                <div class="form-check shop-check"><input class="form-check-input" type="checkbox" data-group="category" id="f-category-zapachy" value="zapachy"><label class="form-check-label" for="f-category-zapachy">Zapachy</label></div>
+                <div class="form-check shop-check"><input class="form-check-input" type="checkbox" data-group="category" id="f-category-smaki" value="smaki"><label class="form-check-label" for="f-category-smaki">Smaki Hiszpanii</label></div>
+                <div class="form-check shop-check"><input class="form-check-input" type="checkbox" data-group="category" id="f-category-upominki" value="upominki"><label class="form-check-label" for="f-category-upominki">Upominki</label></div>
+              </fieldset>
+              <fieldset class="shop-filter">
+                <legend class="sidebar-block__title">Cena</legend>
+                <div class="shop-filter__range-label"><label class="form-label mb-0" for="filterPrice">Cena maksymalna</label> <output id="filterPriceOutput" for="filterPrice">do 500 zł</output></div>
+                <input class="form-range shop-range" type="range" id="filterPrice" min="50" max="500" step="10" value="500">
+              </fieldset>
+              <fieldset class="shop-filter">
+                <legend class="sidebar-block__title">Kolor</legend>
+                <div class="form-check shop-check"><input class="form-check-input" type="checkbox" data-group="color" id="f-color-bialy" value="bialy"><label class="form-check-label" for="f-color-bialy">Biały</label></div>
+                <div class="form-check shop-check"><input class="form-check-input" type="checkbox" data-group="color" id="f-color-niebieski" value="niebieski"><label class="form-check-label" for="f-color-niebieski">Niebieski</label></div>
+                <div class="form-check shop-check"><input class="form-check-input" type="checkbox" data-group="color" id="f-color-naturalny" value="naturalny"><label class="form-check-label" for="f-color-naturalny">Naturalny</label></div>
+                <div class="form-check shop-check"><input class="form-check-input" type="checkbox" data-group="color" id="f-color-wielokolorowy" value="wielokolorowy"><label class="form-check-label" for="f-color-wielokolorowy">Wielokolorowy</label></div>
+              </fieldset>
+              <fieldset class="shop-filter">
+                <legend class="sidebar-block__title">Dostępność</legend>
+                <div class="form-check shop-check"><input class="form-check-input" type="checkbox" id="filterStock"><label class="form-check-label" for="filterStock">W magazynie</label></div>
+                <div class="form-check shop-check"><input class="form-check-input" type="checkbox" id="filterSale"><label class="form-check-label" for="filterSale">Tylko promocje</label></div>
+              </fieldset>
+              <div class="d-flex flex-column gap-2">
+                <button class="btn btn-outline-ink" type="reset">Wyczyść filtry</button>
+                <button class="btn btn-ink d-lg-none" type="submit" data-bs-dismiss="offcanvas" data-bs-target="#shopFilters">Pokaż produkty</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </aside>
+
+      <main class="col-lg-9" id="main">
+        <div class="shop-toolbar" id="produkty">
+          <h2 class="visually-hidden">Produkty</h2>
+          <p class="shop-toolbar__count" id="productCount" role="status">Znaleziono {products.length} {plural(products.length, ['produkt', 'produkty', 'produktów'])}</p>
+          <div class="shop-toolbar__tools">
+            <button class="btn btn-outline-ink d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#shopFilters" aria-controls="shopFilters">
+              <i class="bi bi-sliders" aria-hidden="true"></i> Filtry
+            </button>
+            <div class="shop-sort">
+              <label class="form-label shop-sort__label" for="productSort">Sortuj</label>
+              <select class="form-select shop-select" id="productSort">
+                <option value="popular">Popularność</option>
+                <option value="price-asc">Cena: od najniższej</option>
+                <option value="price-desc">Cena: od najwyższej</option>
+                <option value="name">Nazwa: A–Z</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="row gy-5 gx-3 gx-lg-4" id="productGrid">
+          {products.map((product) => (
+            <div class="col-6 col-xl-4" data-product={product.id}><ProductCard product={product} cta="Zobacz szczegóły" /></div>
+          ))}
+        </div>
+
+        <div class="shop-empty" id="productEmpty" hidden>
+          <p>Żaden produkt nie spełnia wybranych filtrów.</p>
+          <button class="btn btn-outline-ink" type="button" id="productEmptyReset">Wyczyść filtry</button>
+        </div>
+
+        <nav id="shopPagination" aria-label="Strony katalogu">
+          <ul class="pagination blog-pagination justify-content-center">
+            <li class="page-item active"><a class="page-link" href="#produkty" aria-current="page">1</a></li>
+            <li class="page-item"><a class="page-link" href="#produkty" data-page="2">2</a></li>
+          </ul>
+        </nav>
+      </main>
+    </div>
+  </div>
+
+  <Fragment slot="po-stopce">
+    <!-- ===================== POWIADOMIENIA (toast) ===================== -->
+    <div class="toast-container position-fixed p-3 es-toast-container">
+      <div class="toast es-toast" id="appToast" role="status" aria-live="polite" aria-atomic="true">
+        <div class="es-toast__body">
+          <p class="es-toast__title" id="appToastTitle"></p>
+          <p class="es-toast__text" id="appToastText"></p>
+        </div>
+        <button type="button" class="icon-btn es-toast__close" data-bs-dismiss="toast" aria-label="Zamknij powiadomienie"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-close"/></svg></button>
+      </div>
+    </div>
+
+
+  </Fragment>
+</Layout>

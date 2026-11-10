@@ -318,8 +318,9 @@
   // [tekst, wyróżnienie] — tytuł z kursywą <em> na końcu; principles — pary [nazwa, opis];
   // { src, alt } — zdjęcie; experiences — karty Poranek / Popołudnie / Wieczór (zdjęcia z Pexels).
   const DEFAULT_CITY = 'barcelona';
-  const IMG = 'assets/images/cities/';
-  const CTA_BAY = { src: 'assets/images/cta-bay.webp', alt: 'Zatoka z łodziami żaglowymi o zachodzie słońca' };
+  // ES_BASE (adres strony, np. /strona-astro-e-spania/) ustawia Layout.astro
+  const IMG = `${window.ES_BASE || ''}assets/images/cities/`;
+  const CTA_BAY = { src: `${window.ES_BASE || ''}assets/images/cta-bay.webp`, alt: 'Zatoka z łodziami żaglowymi o zachodzie słońca' };
   const CITIES = {
     barcelona: {
       name: 'Barcelona',
@@ -618,7 +619,7 @@
       dzieci: children.value,
       pokoj: roomId,
     });
-    window.location.href = `rezerwacja.html?${params}`;
+    window.location.href = `${window.ES_BASE || ''}rezerwacja/?${params}`;
   }
 
   function focusBooking() {

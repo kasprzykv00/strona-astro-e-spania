@@ -1,0 +1,153 @@
+---
+// Archiwum bloga z podziałem na strony: /blog/, /blog/2/, /blog/3/ ...
+// Wpisy biorą się z plików src/content/blog/*.md — nowy plik = nowa karta na liście.
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import PostCard from '../../components/PostCard.astro';
+import BlogSidebar from '../../components/BlogSidebar.astro';
+import Toast from '../../components/Toast.astro';
+import { url, abs } from '../../utils/url.js';
+import { isoDate } from '../../utils/format.js';
+import { authors } from '../../data/authors.js';
+
+export async function getStaticPaths({ paginate }) {
+  const posts = (await getCollection('blog')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+  return paginate(posts, { pageSize: 6 });   // 6 wpisów na stronę
+}
+
+const { page } = Astro.props;
+const n = page.currentPage;
+const total = page.lastPage;
+const pageUrl = (i) => (i === 1 ? 'blog/' : `blog/${i}/`);
+
+// Opisy kolejnych stron archiwum (strona 1 ma własny tekst niżej)
+const PAGE_TEXT = {
+  2: 'Starsze wpisy z archiwum bloga: Barcelona, paella, Kanary zimą, flamenco, transport i Madryt.',
+  3: 'Starsze wpisy z archiwum bloga: hiszpańskie wina, Majorka poza plażą i bezpieczeństwo w miastach.',
+};
+const shortTitles = page.data.map((post) => post.data.shortTitle).join(', ');
+const intro = n === 1
+  ? 'Piszemy o tym, co warto wiedzieć przed wyjazdem do Hiszpanii — o pogodzie i sezonach, regionalnej kuchni, zwiedzaniu Andaluzji, lokalnych zwyczajach i pakowaniu walizki.'
+  : PAGE_TEXT[n] ?? `Starsze wpisy z archiwum bloga: ${shortTitles}.`;
+
+const title = n === 1 ? 'Blog o Hiszpanii — porady przed podróżą | e-spania' : `Blog o Hiszpanii — strona ${n} z ${total} | e-spania`;
+const description = n === 1
+  ? 'Blog o Hiszpanii dla turystów: kiedy jechać, co zjeść, co zwiedzić w Andaluzji i co spakować. Praktyczne porady, które pomogą zaplanować wyjazd do Hiszpanii.'
+  : `Blog o Hiszpanii, strona ${n}: ${shortTitles} — porady dla turystów przed wyjazdem.`;
+
+// Dane strukturalne (dla wyszukiwarek)
+const schema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': n === 1 ? 'Blog' : 'CollectionPage',
+      '@id': abs(pageUrl(n)) + (n === 1 ? '#blog' : ''),
+      name: n === 1 ? 'Blog e-spania — porady przed podróżą do Hiszpanii' : `Blog o Hiszpanii — strona ${n}`,
+      url: abs(pageUrl(n)),
+      inLanguage: 'pl',
+      publisher: { '@type': 'Organization', name: 'e-spania', logo: { '@type': 'ImageObject', url: abs('assets/logo/logo-dark.png') } },
+      blogPost: page.data.map((post) => ({
+        '@type': 'BlogPosting',
+        headline: post.data.title,
+        url: abs(`blog/${post.id}/`),
+        datePublished: isoDate(post.data.date),
+        author: { '@type': 'Person', name: authors[post.data.author].name },
+        image: abs(post.data.image),
+        articleSection: post.data.category,
+      })),
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Strona główna', item: abs() },
+        { '@type': 'ListItem', position: 2, name: 'Blog', item: abs('blog/') },
+        ...(n > 1 ? [{ '@type': 'ListItem', position: 3, name: `Strona ${n}`, item: abs(pageUrl(n)) }] : []),
+      ],
+    },
+  ],
+};
+---
+<Layout title={title}>
+  <Fragment slot="head">
+    <meta name="description" content={description}>
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="pl_PL">
+    <meta property="og:site_name" content="e-spania">
+    <meta property="og:title" content={n === 1 ? 'Blog o Hiszpanii — porady przed podróżą' : `Blog o Hiszpanii — strona ${n}`}>
+    <meta property="og:description" content={n === 1 ? 'Kiedy jechać, co zjeść, co zwiedzić i co spakować — praktyczne porady dla osób planujących wyjazd do Hiszpanii.' : description}>
+    <meta property="og:url" content={abs(pageUrl(n))}>
+    {n > 1 && <link rel="prev" href={url(pageUrl(n - 1))}>}
+    {n < total && <link rel="next" href={url(pageUrl(n + 1))}>}
+    <meta property="og:image" content={abs('assets/images/blog/og-blog.jpg')}>
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Widok na dzielnicę Albaicín w Granadzie przez zdobiony łuk Alhambry">
+    <link rel="preload" as="image" href={url('assets/images/blog/blog-header-960.webp')} imagesrcset={`${url('assets/images/blog/blog-header-960.webp')} 960w, ${url('assets/images/blog/blog-header-1920.webp')} 1920w`} imagesizes="100vw">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)}></script>
+  </Fragment>
+
+  <!-- ===================== NAGŁÓWEK PODSTRONY ===================== -->
+  <section class="page-header" aria-labelledby="page-title">
+    <img class="page-header__image" src={url('assets/images/blog/blog-header-960.webp')} srcset={`${url('assets/images/blog/blog-header-960.webp')} 960w, ${url('assets/images/blog/blog-header-1920.webp')} 1920w`} sizes="100vw" width="1920" height="1080" fetchpriority="high" alt="Widok na białe domy dzielnicy Albaicín w Granadzie przez zdobiony łuk Alhambry">
+    <div class="page-header__shade" aria-hidden="true"></div>
+    <div class="container page-header__inner">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb blog-breadcrumb">
+          <li class="breadcrumb-item"><a href={url()}>Strona główna</a></li>
+          {n === 1
+            ? <li class="breadcrumb-item active" aria-current="page">Blog</li>
+            : <>
+                <li class="breadcrumb-item"><a href={url('blog/')}>Blog</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Strona {n}</li>
+              </>}
+        </ol>
+      </nav>
+      <h1 class="page-header__title" id="page-title" data-reveal data-split>Blog o Hiszpanii: <em>porady przed podróżą</em>{n > 1 && <> <span class="page-header__page">— strona {n} z {total}</span></>}</h1>
+      <p class="page-header__text">{intro}</p>
+    </div>
+  </section>
+
+  <!-- ===================== WPISY + PASEK BOCZNY ===================== -->
+  <div class="container blog-layout">
+    <div class="row gx-lg-5 gy-5">
+
+      <main class="col-lg-8" id="main">
+        <h2 class="blog-heading" id="wpisy">{n === 1 ? 'Najnowsze wpisy' : `Starsze wpisy — strona ${n}`}</h2>
+
+        <div class="row gy-5 gx-4">
+          {page.data.map((post, i) => (
+            <div class="col-md-6"><PostCard post={post} lazy={i > 1} /></div>
+          ))}
+        </div>
+
+        <!-- Paginacja archiwum -->
+        {total > 1 && (
+          <nav aria-label="Strony archiwum wpisów">
+            <ul class="pagination blog-pagination justify-content-center">
+              <li class={`page-item${n === 1 ? ' disabled' : ''}`}>
+                {n === 1
+                  ? <span class="page-link"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-arrow-left"/></svg><span class="blog-pagination__label">Poprzednia</span></span>
+                  : <a class="page-link" href={url(`${pageUrl(n - 1)}#wpisy`)} rel="prev"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-arrow-left"/></svg><span class="blog-pagination__label">Poprzednia</span></a>}
+              </li>
+              {Array.from({ length: total }, (_, k) => k + 1).map((i) => (
+                i === n
+                  ? <li class="page-item active" aria-current="page"><span class="page-link"><span class="visually-hidden">Strona </span>{i}</span></li>
+                  : <li class="page-item"><a class="page-link" href={url(`${pageUrl(i)}#wpisy`)}><span class="visually-hidden">Strona </span>{i}</a></li>
+              ))}
+              <li class={`page-item${n === total ? ' disabled' : ''}`}>
+                {n === total
+                  ? <span class="page-link"><span class="blog-pagination__label">Następna</span><svg class="icon icon--sm" aria-hidden="true"><use href="#i-arrow"/></svg></span>
+                  : <a class="page-link" href={url(`${pageUrl(n + 1)}#wpisy`)} rel="next"><span class="blog-pagination__label">Następna</span><svg class="icon icon--sm" aria-hidden="true"><use href="#i-arrow"/></svg></a>}
+              </li>
+            </ul>
+          </nav>
+        )}
+      </main>
+
+      <BlogSidebar />
+
+    </div>
+  </div>
+
+  <Toast slot="po-stopce" />
+</Layout>

@@ -1,0 +1,31 @@
+---
+// Karta produktu (strona główna, sklep, „Mogą Cię również zainteresować”).
+// Użycie: <ProductCard product={produkt} cta="Zobacz szczegóły" />
+//   product    — element z getCollection('products')
+//   cta        — napis na przycisku (domyślnie „Zobacz”)
+//   reveal     — animacja pojawiania się (strona główna)
+//   showRating — czy pokazać gwiazdki z liczbą opinii
+import Stars from './Stars.astro';
+import { url } from '../utils/url.js';
+import { money, ratingText, reviewWord } from '../utils/format.js';
+
+const { product, cta = 'Zobacz', reveal = false, showRating = true } = Astro.props;
+const { name, images, badge, price, oldPrice, priceFrom, rating, reviewsCount } = product.data;
+const href = url(`sklep/${product.id}/`);
+---
+<article class="card product-card" data-reveal={reveal ? '' : undefined}>
+  <figure class="product-card__media media-frame">
+    <img src={url(images[0].thumb)} width="800" height="800" loading="lazy" decoding="async" alt={images[0].alt}>
+    {badge && <span class={`badge product-badge${oldPrice ? ' product-badge--sale' : ''}`}>{badge}</span>}
+  </figure>
+  <div class="card-body product-card__body">
+    <h3 class="card-title product-card__title"><a href={href}>{name}</a></h3>
+    {showRating && (
+      <p class="product-rating"><Stars rating={rating} /><span><span class="visually-hidden">Ocena </span>{ratingText(rating)}<span class="visually-hidden"> na 5</span> ({reviewsCount}<span class="visually-hidden"> {reviewWord(reviewsCount)}</span>)</span></p>
+    )}
+    {oldPrice
+      ? <p class="product-price product-price--sale">{money(price)} <s class="product-price__old"><span class="visually-hidden">Cena regularna: </span>{money(oldPrice)}</s></p>
+      : <p class="product-price">{priceFrom ? 'od ' : ''}{money(price)}</p>}
+    <a class="btn btn-ink product-card__cta" href={href}>{cta}<span class="visually-hidden">: {name}</span></a>
+  </div>
+</article>

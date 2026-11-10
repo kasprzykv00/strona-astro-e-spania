@@ -1,0 +1,7 @@
+---
+// Gwiazdki oceny (ikony Bootstrap Icons). Użycie: <Stars rating={4.8} />
+import { starIcons } from '../utils/format.js';
+
+const { rating } = Astro.props;
+---
+<span class="product-rating__stars" aria-hidden="true">{starIcons(rating).map((icon) => <i class={`bi ${icon}`}></i>)}</span>

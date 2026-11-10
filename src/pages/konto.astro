@@ -1,0 +1,223 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { url } from '../utils/url.js';
+---
+<Layout title="Moje konto — rezerwacje i zamówienia | e-spania" page="konto">
+  <Fragment slot="head">
+    <meta name="description" content="Twoje konto e-spania: rezerwacje z kalendarzem i odliczaniem do przyjazdu, historia zamówień, adres dostawy i ustawienia.">
+
+    <!-- Open Graph: pełne adresy strony na GitHub Pages (https://kasprzykv00.github.io/strona-astro-e-spania/). -->
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="pl_PL">
+    <meta property="og:site_name" content="e-spania">
+    <meta property="og:title" content="Moje konto — e-spania">
+    <meta property="og:description" content="Twoje konto e-spania: rezerwacje z kalendarzem i odliczaniem do przyjazdu, historia zamówień, adres dostawy i ustawienia.">
+    <meta property="og:url" content="https://kasprzykv00.github.io/strona-astro-e-spania/konto/">
+    <meta property="og:image" content="https://kasprzykv00.github.io/strona-astro-e-spania/assets/images/sklep/og-sklep.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Złożone ręczniki w piaskowe i granatowe pasy">
+
+    <script is:inline type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebPage",
+          "name": "Moje konto",
+          "description": "Twoje konto e-spania: rezerwacje z kalendarzem i odliczaniem do przyjazdu, historia zamówień, adres dostawy i ustawienia.",
+          "url": "https://kasprzykv00.github.io/strona-astro-e-spania/konto/",
+          "inLanguage": "pl"
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Strona główna",
+              "item": "https://kasprzykv00.github.io/strona-astro-e-spania/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Moje konto",
+              "item": "https://kasprzykv00.github.io/strona-astro-e-spania/konto/"
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+  </Fragment>
+
+  <section class="page-header page-header--plain" aria-labelledby="page-title">
+    <div class="container page-header__inner">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb blog-breadcrumb">
+          <li class="breadcrumb-item"><a href={url()}>Strona główna</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Moje konto</li>
+        </ol>
+      </nav>
+      <h1 class="page-header__title" id="page-title">Moje <em>konto</em></h1>
+    </div>
+  </section>
+
+  <div class="container shop-layout">
+    <div class="row gx-lg-5 gy-5">
+      <aside class="col-lg-3" aria-label="Menu konta">
+        <nav class="account-nav-wrap" aria-label="Sekcje konta">
+          <div class="list-group account-nav">
+            <a class="list-group-item list-group-item-action" href="#pulpit"><i class="bi bi-grid" aria-hidden="true"></i> Pulpit</a>
+            <a class="list-group-item list-group-item-action" href="#rezerwacje"><i class="bi bi-calendar-event" aria-hidden="true"></i> Moje rezerwacje</a>
+            <a class="list-group-item list-group-item-action" href="#zamowienia"><i class="bi bi-box-seam" aria-hidden="true"></i> Moje zamówienia</a>
+            <a class="list-group-item list-group-item-action" href="#adresy"><i class="bi bi-geo-alt" aria-hidden="true"></i> Adresy dostawy</a>
+            <a class="list-group-item list-group-item-action" href="#ustawienia"><i class="bi bi-gear" aria-hidden="true"></i> Ustawienia konta</a>
+            <a class="list-group-item list-group-item-action" href={url()}><i class="bi bi-box-arrow-right" aria-hidden="true"></i> Wyloguj</a>
+          </div>
+        </nav>
+      </aside>
+
+      <main class="col-lg-9" id="main">
+        <div class="account-success" id="accountSuccess" role="status" tabindex="-1" hidden>
+          <i class="bi bi-check-circle" aria-hidden="true"></i>
+          <div>
+            <p class="account-success__title" id="accountSuccessTitle"></p>
+            <p class="account-success__text" id="accountSuccessText"></p>
+          </div>
+        </div>
+
+        <section class="account-section" id="pulpit" aria-labelledby="accountGreeting">
+          <h2 class="account-section__title" id="accountGreeting">Witaj, Anna</h2>
+          <p id="accountIntro">Tu znajdziesz swoje pobyty, zamówienia i dane.</p>
+          <div class="row g-3">
+            <div class="col-sm-4"><div class="account-stat"><span class="account-stat__value" id="statNext">—</span><span class="account-stat__label">do najbliższego pobytu</span></div></div>
+            <div class="col-6 col-sm-4"><div class="account-stat"><span class="account-stat__value" id="statBookings">1</span><span class="account-stat__label">aktywne rezerwacje</span></div></div>
+            <div class="col-6 col-sm-4"><div class="account-stat"><span class="account-stat__value" id="statOrders">2</span><span class="account-stat__label">zamówienia w toku</span></div></div>
+          </div>
+        </section>
+
+        <section class="account-section" id="rezerwacje" aria-labelledby="bookings-title">
+          <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 account-section__head">
+            <h2 class="account-section__title mb-0" id="bookings-title">Moje rezerwacje</h2>
+            <a class="btn btn-outline-ink" href={url('rezerwacja/')}>Nowa rezerwacja</a>
+          </div>
+          <div id="accountBookings">
+            <p class="account-empty">Twoje rezerwacje pojawią się tutaj.</p>
+          </div>
+        </section>
+
+        <section class="account-section" id="zamowienia" aria-labelledby="orders-title">
+          <h2 class="account-section__title" id="orders-title">Moje zamówienia</h2>
+          <div class="table-responsive">
+            <table class="table orders-table">
+              <caption class="visually-hidden">Historia zamówień</caption>
+              <thead>
+                <tr><th scope="col">Numer</th><th scope="col">Data</th><th scope="col">Kwota</th><th scope="col">Status</th><th scope="col"><span class="visually-hidden">Akcja</span></th></tr>
+              </thead>
+              <tbody id="ordersBody">
+                <tr><th scope="row" data-label="Numer">ES-1042</th><td data-label="Data">3 listopada 2026</td><td data-label="Kwota">203,90 zł</td><td data-label="Status"><span class="badge status-badge">W realizacji</span></td><td data-label="Akcja"><a class="btn link-arrow" href="#zamowienia">Szczegóły<span class="visually-hidden"> zamówienia ES-1042</span></a></td></tr>
+                <tr><th scope="row" data-label="Numer">ES-0987</th><td data-label="Data">13 października 2026</td><td data-label="Kwota">298,90 zł</td><td data-label="Status"><span class="badge status-badge status-badge--ok">Wysłane</span></td><td data-label="Akcja"><a class="btn link-arrow" href="#zamowienia">Szczegóły<span class="visually-hidden"> zamówienia ES-0987</span></a></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="account-section" id="adresy" aria-labelledby="address-title">
+          <h2 class="account-section__title" id="address-title">Adresy dostawy</h2>
+          <div class="address-card">
+            <div>
+              <p class="address-card__label">Adres domyślny</p>
+              <p class="address-card__text" id="addressView">Anna Nowak<br>ul. Słoneczna 12/4<br>00-120 Warszawa<br>+48 600 100 200</p>
+            </div>
+            <button class="btn btn-outline-ink" type="button" data-bs-toggle="collapse" data-bs-target="#addressEdit" aria-expanded="false" aria-controls="addressEdit">Edytuj adres</button>
+          </div>
+          <div class="collapse" id="addressEdit">
+            <form class="shop-form address-form" id="addressForm" novalidate>
+              <div class="row g-3">
+                <div class="col-12">
+                <label class="form-label" for="addrStreet">Ulica i numer</label>
+                <input class="form-control" type="text" id="addrStreet" required autocomplete="address-line1">
+                <div class="invalid-feedback">Podaj ulicę i numer.</div>
+              </div>
+                <div class="col-5">
+                <label class="form-label" for="addrPostal">Kod pocztowy</label>
+                <input class="form-control" type="text" id="addrPostal" required pattern="[0-9]{2}-[0-9]{3}" autocomplete="postal-code" inputmode="numeric">
+                <div class="invalid-feedback">Wpisz kod w formacie 00-000.</div>
+              </div>
+                <div class="col-7">
+                <label class="form-label" for="addrCity">Miasto</label>
+                <input class="form-control" type="text" id="addrCity" required autocomplete="address-level2">
+                <div class="invalid-feedback">Podaj miasto.</div>
+              </div>
+                <div class="col-12">
+                <label class="form-label" for="addrPhone">Telefon</label>
+                <input class="form-control" type="tel" id="addrPhone" required autocomplete="tel" minlength="9">
+                <div class="invalid-feedback">Podaj numer telefonu.</div>
+              </div>
+                <div class="col-12"><button class="btn btn-ink" type="submit">Zapisz adres</button></div>
+              </div>
+            </form>
+          </div>
+        </section>
+
+        <section class="account-section" id="ustawienia" aria-labelledby="settings-title">
+          <h2 class="account-section__title" id="settings-title">Ustawienia konta</h2>
+          <form class="shop-form" id="settingsForm" novalidate>
+            <div class="row g-3">
+              <div class="col-sm-6">
+                <label class="form-label" for="setFirstName">Imię</label>
+                <input class="form-control" type="text" id="setFirstName" required autocomplete="given-name">
+                <div class="invalid-feedback">Podaj imię.</div>
+              </div>
+              <div class="col-sm-6">
+                <label class="form-label" for="setLastName">Nazwisko</label>
+                <input class="form-control" type="text" id="setLastName" required autocomplete="family-name">
+                <div class="invalid-feedback">Podaj nazwisko.</div>
+              </div>
+              <div class="col-12">
+                <label class="form-label" for="setEmail">E-mail</label>
+                <input class="form-control" type="email" id="setEmail" required autocomplete="email">
+                <div class="invalid-feedback">Podaj poprawny adres e-mail.</div>
+              </div>
+              <div class="col-12">
+                <div class="form-check form-switch shop-check">
+                  <input class="form-check-input" type="checkbox" role="switch" id="setNewsletter">
+                  <label class="form-check-label" for="setNewsletter">Chcę dostawać oferty specjalne e-mailem</label>
+                </div>
+              </div>
+              <div class="col-12"><button class="btn btn-ink" type="submit">Zapisz zmiany</button></div>
+            </div>
+          </form>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <div class="modal fade" id="orderModal" tabindex="-1" aria-labelledby="orderModalTitle">
+    <div class="modal-dialog modal-dialog-scrollable">
+      <div class="modal-content shop-modal">
+        <div class="modal-header">
+          <h2 class="modal-title shop-modal__title" id="orderModalTitle">Zamówienie</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zamknij"></button>
+        </div>
+        <div class="modal-body" id="orderModalBody"></div>
+      </div>
+    </div>
+  </div>
+
+  <Fragment slot="po-stopce">
+    <!-- ===================== POWIADOMIENIA (toast) ===================== -->
+    <div class="toast-container position-fixed p-3 es-toast-container">
+      <div class="toast es-toast" id="appToast" role="status" aria-live="polite" aria-atomic="true">
+        <div class="es-toast__body">
+          <p class="es-toast__title" id="appToastTitle"></p>
+          <p class="es-toast__text" id="appToastText"></p>
+        </div>
+        <button type="button" class="icon-btn es-toast__close" data-bs-dismiss="toast" aria-label="Zamknij powiadomienie"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-close"/></svg></button>
+      </div>
+    </div>
+
+
+  </Fragment>
+</Layout>

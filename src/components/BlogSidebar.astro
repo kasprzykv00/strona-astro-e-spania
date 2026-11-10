@@ -1,0 +1,62 @@
+---
+// Pasek boczny bloga: wyszukiwarka (makieta), kategorie z liczbą wpisów, polecane artykuły.
+// Kategorie i polecane wpisy liczą się same z plików .md (pole „featured” we wpisie).
+import { getCollection } from 'astro:content';
+import { url } from '../utils/url.js';
+import { longDate, isoDate } from '../utils/format.js';
+
+const posts = (await getCollection('blog')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+// Kolejność kategorii jak na starej stronie; nowe kategorie trafią na koniec listy
+const ORDER = ['Planowanie podróży', 'Zwiedzanie', 'Kuchnia', 'Kultura i zwyczaje', 'Praktyczne porady'];
+const counts = new Map();
+posts.forEach((post) => counts.set(post.data.category, (counts.get(post.data.category) || 0) + 1));
+const categories = [...counts.keys()].sort((a, b) => {
+  const ia = ORDER.includes(a) ? ORDER.indexOf(a) : 99;
+  const ib = ORDER.includes(b) ? ORDER.indexOf(b) : 99;
+  return ia - ib;
+});
+
+const featured = posts.filter((post) => post.data.featured).slice(0, 3);
+---
+<aside class="col-lg-4 blog-sidebar" aria-label="Pasek boczny bloga">
+  <section class="sidebar-block" aria-labelledby="search-title">
+    <h2 class="sidebar-block__title" id="search-title">Szukaj na blogu</h2>
+    <form class="blog-search" role="search" novalidate data-demo-form data-demo-title="Wyszukiwarka" data-demo-text="Wyszukiwanie wpisów uruchomimy wkrótce. Tymczasem zajrzyj do kategorii obok.">
+      <label class="visually-hidden" for="blogSearch">Szukaj wpisów na blogu</label>
+      <div class="blog-search__group">
+        <input class="form-control blog-search__input" type="search" id="blogSearch" name="q" placeholder="np. pogoda, tapas, Sewilla" required minlength="2" aria-describedby="blogSearchError">
+        <button class="btn icon-btn blog-search__button" type="submit" aria-label="Szukaj">
+          <svg class="icon" aria-hidden="true"><use href="#i-search"/></svg>
+        </button>
+      </div>
+      <p class="invalid-feedback" id="blogSearchError">Wpisz co najmniej 2 znaki.</p>
+    </form>
+  </section>
+
+  <section class="sidebar-block" aria-labelledby="categories-title">
+    <h2 class="sidebar-block__title" id="categories-title">Kategorie</h2>
+    <ul class="list-group category-list">
+      {categories.map((name) => (
+        <li class="list-group-item"><a class="category-list__link" href={url('blog/#wpisy')}>{name} <span class="badge count-badge"><span class="visually-hidden">liczba wpisów: </span>{counts.get(name)}</span></a></li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="sidebar-block" aria-labelledby="featured-title">
+    <h2 class="sidebar-block__title" id="featured-title">Polecane artykuły</h2>
+    <ul class="featured-list">
+      {featured.map((post) => (
+        <li>
+          <a class="featured-post" href={url(`blog/${post.id}/`)}>
+            <span class="featured-post__thumb media-frame"><img src={url(post.data.featured.thumb)} width="240" height="180" loading="lazy" decoding="async" alt={post.data.featured.thumbAlt}></span>
+            <span>
+              <span class="featured-post__title">{post.data.featured.title}</span>
+              <time class="featured-post__date" datetime={isoDate(post.data.date)}>{longDate(post.data.date)}</time>
+            </span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+</aside>

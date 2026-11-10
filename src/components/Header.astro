@@ -1,10 +1,19 @@
 ---
-import { url, sekcja } from '../utils/url.js';
+// Nagłówek strony: logo, menu, język, konto, koszyk, „Rezerwuj”.
+// Sam rozpoznaje, na której stronie jest, i podświetla właściwy link.
+import { url, sekcja, isHome } from '../utils/url.js';
+
+const path = Astro.url.pathname;
+const home = isHome(path);
+const inSection = (name) => path.startsWith(url(name));
+// aria-current: „page” na stronie głównej działu, „true” na jego podstronach (np. wpis, produkt)
+const current = (name) => (path.replace(/\/$/, '') === url(name).replace(/\/$/, '') ? 'page' : inSection(name) ? 'true' : undefined);
+const cartCurrent = inSection('koszyk') || inSection('zamowienie') ? 'page' : undefined;
 ---
 <header class="site-header fixed-top">
   <nav class="navbar navbar-expand-xl site-nav" aria-label="Nawigacja główna">
     <div class="container-fluid site-nav__inner">
-      <a class="navbar-brand site-nav__brand" href={url()} data-action="scroll-top" aria-label="e-spania — strona główna">
+      <a class="navbar-brand site-nav__brand" href={url()} data-action={home ? 'scroll-top' : undefined} aria-label="e-spania — strona główna">
         <img class="site-nav__logo site-nav__logo--light" src={url('assets/logo/logo-light.png')} alt="e-spania" width="479" height="270">
         <img class="site-nav__logo site-nav__logo--dark" src={url('assets/logo/logo-dark.png')} alt="e-spania" width="479" height="270">
       </a>
@@ -19,14 +28,14 @@ import { url, sekcja } from '../utils/url.js';
         </div>
         <div class="offcanvas-body site-menu__body">
           <ul class="navbar-nav site-menu__list mx-xl-auto">
-            <li class="nav-item"><a class="nav-link site-menu__link" href={sekcja('hotel', Astro.url.pathname)}>Hotel</a></li>
-            <li class="nav-item"><a class="nav-link site-menu__link" href={sekcja('pokoje', Astro.url.pathname)}>Pokoje</a></li>
-            <li class="nav-item"><a class="nav-link site-menu__link" href={sekcja('doswiadczenia', Astro.url.pathname)}>Doświadczenia</a></li>
-            <li class="nav-item"><a class="nav-link site-menu__link" href={sekcja('galeria', Astro.url.pathname)}>Galeria</a></li>
-            <li class="nav-item"><a class="nav-link site-menu__link" href={sekcja('opinie', Astro.url.pathname)}>Opinie</a></li>
-            <li class="nav-item"><a class="nav-link site-menu__link" href={sekcja('kontakt', Astro.url.pathname)}>Kontakt</a></li>
-            <li class="nav-item"><a class="nav-link site-menu__link site-menu__link--featured site-menu__link--divider" href={url('sklep/')}>Sklep</a></li>
-            <li class="nav-item"><a class="nav-link site-menu__link site-menu__link--featured" href={url('blog/')}>Blog</a></li>
+            <li class="nav-item"><a class="nav-link site-menu__link" href={sekcja('hotel', path)}>Hotel</a></li>
+            <li class="nav-item"><a class="nav-link site-menu__link" href={sekcja('pokoje', path)}>Pokoje</a></li>
+            <li class="nav-item"><a class="nav-link site-menu__link" href={sekcja('doswiadczenia', path)}>Doświadczenia</a></li>
+            <li class="nav-item"><a class="nav-link site-menu__link" href={sekcja('galeria', path)}>Galeria</a></li>
+            <li class="nav-item"><a class="nav-link site-menu__link" href={sekcja('opinie', path)}>Opinie</a></li>
+            <li class="nav-item"><a class="nav-link site-menu__link" href="#kontakt">Kontakt</a></li>
+            <li class="nav-item"><a class="nav-link site-menu__link site-menu__link--featured site-menu__link--divider" href={url('sklep/')} aria-current={current('sklep')}>Sklep</a></li>
+            <li class="nav-item"><a class="nav-link site-menu__link site-menu__link--featured" href={url('blog/')} aria-current={current('blog')}>Blog</a></li>
           </ul>
           <div class="site-menu__foot d-xl-none">
             <div class="site-menu__langs d-sm-none" role="group" aria-label="Język strony">
@@ -52,13 +61,13 @@ import { url, sekcja } from '../utils/url.js';
           </ul>
         </div>
 
-        <a class="icon-btn nav-icon" href={url('konto/')} aria-label="Konto użytkownika"><i class="bi bi-person" aria-hidden="true"></i></a>
-        <a class="icon-btn nav-icon" href={url('koszyk/')} aria-label="Koszyk, liczba produktów: 2">
+        <a class="icon-btn nav-icon" href={url('konto/')} aria-current={inSection('konto') ? 'page' : undefined} aria-label="Konto użytkownika"><i class="bi bi-person" aria-hidden="true"></i></a>
+        <a class="icon-btn nav-icon" href={url('koszyk/')} aria-current={cartCurrent} aria-label="Koszyk, liczba produktów: 2">
           <i class="bi bi-cart" aria-hidden="true"></i>
           <span class="badge nav-badge" aria-hidden="true" data-cart-count>2</span>
         </a>
 
-        <a class="btn btn-accent btn-book" href={sekcja('rezerwacja', Astro.url.pathname)} data-action="focus-booking">Rezerwuj</a>
+        <a class="btn btn-accent btn-book" href={sekcja('rezerwacja', path)} data-action={home ? 'focus-booking' : undefined}>Rezerwuj</a>
 
         <button class="navbar-toggler icon-btn site-nav__toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#siteMenu" aria-controls="siteMenu" aria-label="Otwórz menu">
           <svg class="icon" aria-hidden="true"><use href="#i-menu"/></svg>

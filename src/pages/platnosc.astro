@@ -1,0 +1,173 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { url } from '../utils/url.js';
+---
+<Layout title="Płatność | e-spania" page="platnosc">
+  <Fragment slot="head">
+    <meta name="description" content="Bezpieczne dokończenie płatności za pobyt lub zamówienie w e-spania: BLIK, karta płatnicza albo szybki przelew.">
+
+    <!-- Open Graph: pełne adresy strony na GitHub Pages (https://kasprzykv00.github.io/strona-astro-e-spania/). -->
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="pl_PL">
+    <meta property="og:site_name" content="e-spania">
+    <meta property="og:title" content="Płatność — e-spania">
+    <meta property="og:description" content="Bezpieczne dokończenie płatności za pobyt lub zamówienie w e-spania: BLIK, karta płatnicza albo szybki przelew.">
+    <meta property="og:url" content="https://kasprzykv00.github.io/strona-astro-e-spania/platnosc/">
+    <meta property="og:image" content="https://kasprzykv00.github.io/strona-astro-e-spania/assets/images/sklep/og-sklep.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Złożone ręczniki w piaskowe i granatowe pasy">
+
+    <script is:inline type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebPage",
+          "name": "Płatność",
+          "description": "Bezpieczne dokończenie płatności za pobyt lub zamówienie w e-spania: BLIK, karta płatnicza albo szybki przelew.",
+          "url": "https://kasprzykv00.github.io/strona-astro-e-spania/platnosc/",
+          "inLanguage": "pl"
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Strona główna",
+              "item": "https://kasprzykv00.github.io/strona-astro-e-spania/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Płatność",
+              "item": "https://kasprzykv00.github.io/strona-astro-e-spania/platnosc/"
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+  </Fragment>
+
+  <section class="page-header page-header--plain" aria-labelledby="page-title">
+    <div class="container page-header__inner">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb blog-breadcrumb">
+          <li class="breadcrumb-item"><a href={url()}>Strona główna</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Płatność</li>
+        </ol>
+      </nav>
+      <h1 class="page-header__title" id="page-title">Płatność</h1>
+    </div>
+  </section>
+
+  <main id="main" class="container shop-layout payment-page">
+    <div class="shop-empty" id="paymentNone" hidden>
+      <p>Nie ma nic do opłacenia. Wybierz pobyt lub produkty, a wrócisz tu na końcu.</p>
+      <div class="d-flex flex-wrap justify-content-center gap-2">
+        <a class="btn btn-ink" href={url('rezerwacja/')}>Zarezerwuj pobyt</a>
+        <a class="btn btn-outline-ink" href={url('sklep/')}>Przejdź do sklepu</a>
+      </div>
+    </div>
+
+    <div class="row gx-lg-5 gy-5 flex-lg-row-reverse" id="paymentContent" hidden>
+      <div class="col-lg-5">
+        <section class="card summary-card" id="paymentSummary" aria-labelledby="pay-summary">
+          <div class="card-body">
+            <h2 class="summary-card__title" id="pay-summary">Do zapłaty</h2>
+            <p class="summary-card__hotel" id="paymentTitle"></p>
+            <p class="summary-card__note" id="paymentSubtitle"></p>
+            <ul class="summary-list" id="paymentLines"></ul>
+            <p class="summary-total"><span>Razem</span><strong id="paymentTotal"></strong></p>
+          </div>
+        </section>
+      </div>
+
+      <div class="col-lg-7">
+        <form class="shop-form" id="paymentForm" novalidate autocomplete="off">
+          <section class="form-section">
+            <fieldset>
+              <legend class="form-section__title">Wybierz metodę</legend>
+              <div class="option-card option-card--compact">
+                <div class="form-check option-card__check">
+                  <input class="form-check-input" type="radio" name="method" id="method-karta" value="karta" checked>
+                  <label class="form-check-label" for="method-karta"><span class="option-card__name">Karta płatnicza</span></label>
+                </div>
+              </div>
+              <div class="option-card option-card--compact">
+                <div class="form-check option-card__check">
+                  <input class="form-check-input" type="radio" name="method" id="method-blik" value="blik">
+                  <label class="form-check-label" for="method-blik"><span class="option-card__name">BLIK</span></label>
+                </div>
+              </div>
+              <div class="option-card option-card--compact">
+                <div class="form-check option-card__check">
+                  <input class="form-check-input" type="radio" name="method" id="method-przelew" value="przelew">
+                  <label class="form-check-label" for="method-przelew"><span class="option-card__name">Szybki przelew</span></label>
+                </div>
+              </div>
+            </fieldset>
+          </section>
+
+          <section class="form-section payment-panel" id="panel-karta" aria-label="Dane karty">
+            <div class="row g-3">
+              <div class="col-12">
+                <label class="form-label" for="cardNumber">Numer karty</label>
+                <input class="form-control" type="text" id="cardNumber" inputmode="numeric" maxlength="19" autocomplete="off" placeholder="0000 0000 0000 0000">
+                <div class="invalid-feedback">Numer karty ma 16 cyfr.</div>
+              </div>
+              <div class="col-sm-6">
+                <label class="form-label" for="cardExpiry">Ważność</label>
+                <input class="form-control" type="text" id="cardExpiry" maxlength="7" autocomplete="off" pattern="[0-9]{1,2}/[0-9]{1,4}" placeholder="MM/RR">
+                <div class="invalid-feedback">Wpisz ważność z ukośnikiem, np. 12/28.</div>
+              </div>
+            </div>
+          </section>
+
+          <section class="form-section payment-panel" id="panel-blik" aria-label="Kod BLIK" hidden>
+            <label class="form-label" for="blikCode">Kod BLIK</label>
+            <input class="form-control payment-panel__blik" type="text" id="blikCode" inputmode="numeric" maxlength="6" pattern="[0-9]{6}" autocomplete="off">
+            <div class="invalid-feedback">Kod BLIK ma 6 cyfr.</div>
+          </section>
+
+          <section class="form-section payment-panel" id="panel-przelew" aria-label="Wybór banku" hidden>
+            <label class="form-label" for="bankSelect">Twój bank</label>
+            <select class="form-select" id="bankSelect">
+              <option value="">Wybierz bank</option>
+              <option>PKO BP</option>
+              <option>mBank</option>
+              <option>Santander</option>
+              <option>ING Bank Śląski</option>
+              <option>Pekao</option>
+            </select>
+            <div class="invalid-feedback">Wybierz bank.</div>
+          </section>
+
+          <p class="payment-note"><i class="bi bi-shield-check" aria-hidden="true"></i> Dane karty nie są nigdzie wysyłane ani zapisywane.</p>
+          <button class="btn btn-accent btn-lg-pill w-100" id="paymentSubmit" type="submit">
+            <span class="spinner-border spinner-border-sm" id="paymentSpinner" aria-hidden="true" hidden></span>
+            <span id="paymentSubmitLabel">Zapłać <span id="paymentButtonAmount"></span></span>
+          </button>
+          <a class="summary-card__back" id="paymentBack" href={url()}>Wróć</a>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <Fragment slot="po-stopce">
+    <!-- ===================== POWIADOMIENIA (toast) ===================== -->
+    <div class="toast-container position-fixed p-3 es-toast-container">
+      <div class="toast es-toast" id="appToast" role="status" aria-live="polite" aria-atomic="true">
+        <div class="es-toast__body">
+          <p class="es-toast__title" id="appToastTitle"></p>
+          <p class="es-toast__text" id="appToastText"></p>
+        </div>
+        <button type="button" class="icon-btn es-toast__close" data-bs-dismiss="toast" aria-label="Zamknij powiadomienie"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-close"/></svg></button>
+      </div>
+    </div>
+
+
+  </Fragment>
+</Layout>

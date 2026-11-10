@@ -1,46 +1,85 @@
-# Astro Starter Kit: Basics
+# e-spania w Astro
 
-```sh
-npm create astro@latest -- --template basics
+Strona hoteli e-spania (Barcelona, Malaga, Madryt) z blogiem i sklepem, przeniesiona ze statycznego HTML do [Astro](https://astro.build).
+
+Adres na GitHub Pages: https://kasprzykv00.github.io/strona-astro-e-spania/
+
+## Uruchomienie lokalnie
+
+```
+npm install
+npm run dev
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Strona działa pod adresem `http://localhost:4321/strona-astro-e-spania/`.
 
-## 🚀 Project Structure
+## Publikacja
 
-Inside of your Astro project, you'll see the following folders and files:
+Każdy push na gałąź `main` uruchamia `.github/workflows/deploy.yml`, który buduje stronę i wysyła ją na GitHub Pages.
+W repozytorium: **Settings → Pages → Source: GitHub Actions**.
 
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
+## Struktura
+
+```
+src/
+  components/
+    Header.astro        nagłówek (logo, menu, język, konto, koszyk)
+    Footer.astro        stopka
+    PostCard.astro      karta wpisu na blogu
+    ProductCard.astro   karta produktu
+    Stars.astro         gwiazdki oceny
+    BlogSidebar.astro   pasek boczny bloga (kategorie, polecane)
+    IconSprite.astro    ikony SVG
+    Toast.astro         okienko powiadomień
+  layouts/
+    Layout.astro        wspólny szkielet strony (<head>, Header, Footer, skrypty)
+  content/
+    blog/*.md           wpisy na blogu (1 plik = 1 wpis)
+    products/*.md       produkty w sklepie (1 plik = 1 produkt)
+  content.config.ts     jakie pola mają wpisy i produkty
+  data/authors.js       autorzy wpisów
+  pages/
+    index.astro         strona główna
+    blog/[...page].astro  archiwum bloga z podziałem na strony (/blog/, /blog/2/…)
+    blog/[id].astro       pojedynczy wpis (/blog/pogoda/)
+    sklep/index.astro     katalog sklepu
+    sklep/[id].astro      karta produktu (/sklep/costa/)
+    koszyk, zamowienie, platnosc, rezerwacja, konto  — pozostałe podstrony
+  utils/
+    url.js              adresy z uwzględnieniem nazwy repozytorium (base)
+    format.js           ceny, daty, oceny
+public/
+  assets/               zdjęcia, logo, wideo
+  css/styles.css        style strony
+  js/                   skrypty (menu, rezerwacja, koszyk, wersje językowe)
 ```
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+## Jak dodać wpis na blogu
 
-## 🧞 Commands
+Utwórz plik `src/content/blog/nazwa-wpisu.md` (nazwa pliku = adres `/blog/nazwa-wpisu/`):
 
-All commands are run from the root of the project, from a terminal:
+```md
+---
+title: "Pełny tytuł wpisu"
+shortTitle: "Krótki tytuł"
+excerpt: "Zajawka widoczna na karcie."
+category: "Zwiedzanie"
+date: 2026-11-10
+author: oskar
+image: "assets/images/blog/zdjecie-800.webp"
+imageAlt: "Opis zdjęcia"
+tags: ["Hiszpania"]
+---
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+Treść wpisu w Markdownie.
+```
 
-## 👀 Want to learn more?
+## Jak dodać produkt
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Skopiuj dowolny plik z `src/content/products/` i zmień dane. Nazwa pliku to adres produktu (`/sklep/nazwa/`).
+Produkty z plików `.md` trafiają też do koszyka i filtrów (Layout przekazuje je skryptom jako `window.ES_PRODUCTS`).
+
+## O projekcie
+
+e-spania to fikcyjny hotel — projekt na Responsive Web Design: Oskar Kasprzyk, Dawid Jajko, Krystian Jałocha.
+Koszyk, zamówienia i konto zapisują się w `localStorage` przeglądarki (bez backendu). Zdjęcia z Pexels.

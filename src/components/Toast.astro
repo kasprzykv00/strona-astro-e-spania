@@ -1,0 +1,13 @@
+---
+// Okienko powiadomień (toast) — skrypty pokazują w nim komunikaty, np. „Skopiowano link”.
+---
+<!-- ===================== POWIADOMIENIA (toast) ===================== -->
+<div class="toast-container position-fixed p-3 es-toast-container">
+  <div class="toast es-toast" id="appToast" role="status" aria-live="polite" aria-atomic="true">
+    <div class="es-toast__body">
+      <p class="es-toast__title" id="appToastTitle"></p>
+      <p class="es-toast__text" id="appToastText"></p>
+    </div>
+    <button type="button" class="icon-btn es-toast__close" data-bs-dismiss="toast" aria-label="Zamknij powiadomienie"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-close"/></svg></button>
+  </div>
+</div>

@@ -9,6 +9,9 @@
 
   const { qs, qsa, toISO, fromISO, addDays, nightsBetween, notify, t, tn, tw, lang, locale } = window.ES;
   const { products, rooms, extras, excursions, cities, delivery, payments, discountCodes } = window.ES_DATA;
+  // Adres strony z Astro (np. /strona-astro-e-spania/) — od niego budujemy linki do podstron
+  const BASE = window.ES_BASE || '';
+  const productUrl = (id) => `${BASE}sklep/${id}/`;
 
   /* ---------- Pomocnicze ---------- */
 
@@ -210,9 +213,9 @@
             ${badge}
           </figure>
           <div class="card-body product-card__body">
-            <h3 class="card-title product-card__title"><a href="produkt.html?id=${product.id}">${name}</a></h3>
+            <h3 class="card-title product-card__title"><a href="${productUrl(product.id)}">${name}</a></h3>
             ${productPriceHTML(product)}
-            <a class="btn btn-ink product-card__cta" href="produkt.html?id=${product.id}">${t('Zobacz')}<span class="visually-hidden">: ${name}</span></a>
+            <a class="btn btn-ink product-card__cta" href="${productUrl(product.id)}">${t('Zobacz')}<span class="visually-hidden">: ${name}</span></a>
           </div>
         </article>
       </div>`;
@@ -307,7 +310,8 @@
 
   /* ---------- Karta produktu (produkt.html?id=…) ---------- */
   function initProduct() {
-    const product = findProduct(new URLSearchParams(window.location.search).get('id')) || products[0];
+    // Astro wpisuje id produktu w <body data-product-id="…">
+    const product = findProduct(document.body.dataset.productId || new URLSearchParams(window.location.search).get('id')) || products[0];
     const variantEl = qs('#productVariant');
     const qtyEl = qs('#productQty');
     const mainImage = qs('#productImage');
@@ -325,7 +329,8 @@
       ? `<i class="bi bi-check-circle" aria-hidden="true"></i> ${t('W magazynie, wysyłka w 24 godziny')}`
       : `<i class="bi bi-hourglass-split" aria-hidden="true"></i> ${t('Na zamówienie, wysyłka do 10 dni')}`;
     qs('#productStock').classList.toggle('product-stock--order', !product.inStock);
-    qs('#productDescription').textContent = t(product.description);
+    // Opis po polsku jest już na stronie (z pliku .md); podmieniamy go tylko w wersji EN/ES
+    if (lang !== 'pl') qs('#productDescription').textContent = t(product.description);
     qs('#productSpecs').innerHTML = product.specs.map(([key, value]) => `<tr><th scope="row">${t(key)}</th><td>${t(value)}</td></tr>`).join('');
     qs('#productReviewsSummary').innerHTML = `${starsHTML(product.rating)}<span>${ratingText(product.rating)} ${t('na 5')} · ${product.reviewsCount} ${reviewWord(product.reviewsCount)}</span>`;
     qs('#productReviews').innerHTML = product.reviews.map((review) => `<li class="product-review">
@@ -387,7 +392,7 @@
       name: product.name, sku: product.sku, description: product.lead, category: product.categoryLabel,
       image: product.images.map((image) => absolute(image.src)),
       aggregateRating: { '@type': 'AggregateRating', ratingValue: product.rating, reviewCount: product.reviewsCount },
-      offers: { '@type': 'Offer', price: String(product.price), priceCurrency: 'PLN', availability: `https://schema.org/${product.inStock ? 'InStock' : 'PreOrder'}`, url: absolute(`produkt.html?id=${product.id}`) },
+      offers: { '@type': 'Offer', price: String(product.price), priceCurrency: 'PLN', availability: `https://schema.org/${product.inStock ? 'InStock' : 'PreOrder'}`, url: absolute(productUrl(product.id)) },
     });
     qs('#productSchema').textContent = JSON.stringify(schema);
   }
@@ -425,7 +430,7 @@
         const name = t(line.product.name);
         return `<tr data-line="${i}">
           <td class="cart-table__product" data-label="${t('Produkt')}">
-            <a class="cart-item" href="produkt.html?id=${line.id}">
+            <a class="cart-item" href="${productUrl(line.id)}">
               <img class="cart-item__thumb" src="${image.thumb}" width="800" height="800" loading="lazy" decoding="async" alt="${esc(t(image.alt))}">
               <span><span class="cart-item__name">${name}</span><span class="cart-item__variant">${esc(t(line.variant))}</span></span>
             </a>
@@ -596,7 +601,7 @@
           invoice: invoiceToggle.checked ? `${value('coCompany')}, NIP ${value('coNip')}` : '',
         },
       });
-      window.location.href = 'platnosc.html';
+      window.location.href = `${BASE}platnosc/`;
     });
 
     renderSummary();
@@ -779,7 +784,7 @@
           notes: qs('#resNotes').value.trim(),
         },
       });
-      window.location.href = 'platnosc.html';
+      window.location.href = `${BASE}platnosc/`;
     });
 
     renderTrips();
@@ -805,7 +810,7 @@
     qs('#paymentLines').innerHTML = pending.lines.map((line) => `<li class="summary-item"><span>${esc(line.label)}</span><span>${line.amount < 0 ? '− ' : ''}${money(Math.abs(line.amount))}</span></li>`).join('');
     qs('#paymentTotal').textContent = money(pending.total);
     qs('#paymentButtonAmount').textContent = money(pending.total);
-    qs('#paymentBack').href = pending.type === 'order' ? 'zamowienie.html' : 'rezerwacja.html';
+    qs('#paymentBack').href = BASE + (pending.type === 'order' ? 'zamowienie/' : 'rezerwacja/');
 
     const method = () => qs('input[name="method"]:checked', form).value;
 
@@ -851,7 +856,7 @@
         store.remove('es-discount');
       }
       store.remove('es-pending');
-      window.location.href = `konto.html?platnosc=${pending.type === 'booking' ? 'rezerwacja' : 'zamowienie'}&nr=${ref}`;
+      window.location.href = `${BASE}konto/?platnosc=${pending.type === 'booking' ? 'rezerwacja' : 'zamowienie'}&nr=${ref}`;
     }
 
     form.addEventListener('submit', (event) => {
@@ -1067,7 +1072,7 @@
       box.hidden = false;
       box.focus();
       // Odświeżenie strony nie powinno pokazywać komunikatu ponownie
-      window.history.replaceState(null, '', paid === 'rezerwacja' ? 'konto.html#rezerwacje' : 'konto.html#zamowienia');
+      window.history.replaceState(null, '', BASE + (paid === 'rezerwacja' ? 'konto/#rezerwacje' : 'konto/#zamowienia'));
     }
 
     renderDashboard();
