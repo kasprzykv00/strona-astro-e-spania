@@ -1,11 +1,11 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Toast from '../components/Toast.astro';
 import { url } from '../utils/url.js';
 import { getCollection } from 'astro:content';
 import PostCard from '../components/PostCard.astro';
 import ProductCard from '../components/ProductCard.astro';
 
-// 3 najnowsze wpisy z bloga i 4 pierwsze produkty ze sklepu (pliki .md)
 const latestPosts = (await getCollection('blog'))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
   .slice(0, 3);
@@ -17,7 +17,6 @@ const featuredProducts = (await getCollection('products'))
   <Fragment slot="head">
     <meta name="description" content="e-spania to hotele w Barcelonie, Maladze i Madrycie: jasne pokoje i spokojny, hiszpański rytm dnia. Wybierz miasto, sprawdź termin i wybierz pokój.">
 
-    <!-- Open Graph: pełne adresy strony na GitHub Pages (https://kasprzykv00.github.io/strona-astro-e-spania/). -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://kasprzykv00.github.io/strona-astro-e-spania/">
     <meta property="og:locale" content="pl_PL">
@@ -32,7 +31,6 @@ const featuredProducts = (await getCollection('products'))
     <link rel="preload" as="image" href={url('assets/images/hero-mobile.webp')} media="(max-width: 767.98px)">
     <link rel="preload" as="image" href={url('assets/images/hero-1280.webp')} imagesrcset={`${url('assets/images/hero-1280.webp')} 1280w, ${url('assets/images/hero-1920.webp')} 1920w`} imagesizes="100vw" media="(min-width: 768px)">
 
-    <!-- Dane strukturalne: marka i trzy hotele -->
     <script is:inline type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -97,20 +95,17 @@ const featuredProducts = (await getCollection('products'))
   </Fragment>
 
   <main id="main">
-    <!-- ===================== HERO ===================== -->
     <section class="hero" aria-labelledby="hero-title">
       <picture class="hero__media">
         <source media="(min-width: 768px)" srcset={`${url('assets/images/hero-1280.webp')} 1280w, ${url('assets/images/hero-1920.webp')} 1920w`} sizes="100vw" width="1920" height="1150">
         <img class="hero__image" src={url('assets/images/hero-mobile.webp')} width="828" height="1300" alt="Basen z turkusową mozaiką przed bielonym domem z kamiennym murem, kwitnącą bugenwillą i palmą" fetchpriority="high">
       </picture>
-      <!-- Film w tle: montaż widoków z Hiszpanii (Pexels). Wersję poziomą lub pionową wybiera JS. -->
       <video class="hero__video" id="heroVideo" muted loop playsinline preload="none" aria-hidden="true"
              data-src-landscape={url('assets/video/hero-desktop.mp4')} data-src-portrait={url('assets/video/hero-mobile.mp4')}></video>
       <div class="hero__shade" aria-hidden="true"></div>
 
       <div class="container hero__inner">
         <div class="hero__content">
-          <!-- Teksty z data-city podmienia main.js po wyborze miasta (w HTML: Barcelona, miasto domyślne) -->
           <p class="eyebrow eyebrow--light eyebrow--center hero__eyebrow" data-city="heroEyebrow">e-spania · Barcelona</p>
           <h1 class="hero__title" id="hero-title" data-split data-city="heroTitle">Barcelona, gdzie miasto <em>spotyka morze</em></h1>
           <a class="hero__discover" href="#hotel">
@@ -119,10 +114,8 @@ const featuredProducts = (await getCollection('products'))
           </a>
         </div>
 
-        <!-- ===== Moduł sprawdzania dostępności — pasek w stylu glassmorphism ===== -->
         <form class="booking" id="rezerwacja" novalidate aria-labelledby="booking-title">
           <h2 class="visually-hidden" id="booking-title">Sprawdź dostępność pobytu</h2>
-          <!-- Wybór hotelu: przyciski-przełączniki Bootstrapa (radio .btn-check + label .btn) -->
           <fieldset class="city-switch">
             <legend class="visually-hidden">Wybierz hotel</legend>
             <div class="d-inline-flex align-items-center city-switch__group">
@@ -149,7 +142,7 @@ const featuredProducts = (await getCollection('products'))
                   <p class="calendar__hint" id="calendarHint" aria-live="polite">Wybierz datę przyjazdu</p>
                   <button class="icon-btn calendar__nav" type="button" data-cal-step="1" aria-label="Następny miesiąc"><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></button>
                 </div>
-                <div class="calendar__months" id="calendarMonths"><!-- miesiące rysuje JS --></div>
+                <div class="calendar__months" id="calendarMonths"></div>
                 <div class="booking-pop__foot">
                   <button class="booking-pop__link" type="button" id="calendarClear">Wyczyść</button>
                   <button class="booking-pop__link booking-pop__link--strong" type="button" id="calendarDone">Gotowe</button>
@@ -213,7 +206,6 @@ const featuredProducts = (await getCollection('products'))
       </button>
     </section>
 
-    <!-- ===================== O HOTELU ===================== -->
     <section class="section about" id="hotel" aria-labelledby="about-title">
       <div class="container">
         <div class="row gy-5 align-items-center">
@@ -242,7 +234,6 @@ const featuredProducts = (await getCollection('products'))
       </div>
     </section>
 
-    <!-- ===================== POKOJE ===================== -->
     <section class="section rooms" id="pokoje" aria-labelledby="rooms-title">
       <div class="container">
         <div class="row align-items-end gy-4 section-head">
@@ -336,7 +327,6 @@ const featuredProducts = (await getCollection('products'))
       </div>
     </section>
 
-    <!-- ===================== DOŚWIADCZENIA ===================== -->
     <section class="section section--dark experiences" id="doswiadczenia" aria-labelledby="experiences-title">
       <div class="container">
         <div class="row align-items-end gy-4 section-head">
@@ -349,7 +339,6 @@ const featuredProducts = (await getCollection('products'))
           </div>
         </div>
 
-        <!-- Treść kart zależy od miasta (data-city="experiences"); pory dnia są wspólne -->
         <div class="row gy-5 gx-lg-5" data-city="experiences">
           <div class="col-md-4">
             <article class="experience" data-reveal>
@@ -385,7 +374,6 @@ const featuredProducts = (await getCollection('products'))
       </div>
     </section>
 
-    <!-- ===================== GALERIA ===================== -->
     <section class="section gallery" id="galeria" aria-labelledby="gallery-title">
       <div class="container">
         <div class="row align-items-end gy-4 section-head">
@@ -411,7 +399,6 @@ const featuredProducts = (await getCollection('products'))
       </div>
     </section>
 
-    <!-- ===================== OPINIE ===================== -->
     <section class="section section--soft" id="opinie" aria-labelledby="reviews-title">
       <div class="container">
         <div class="row align-items-end gy-4 section-head">
@@ -459,7 +446,6 @@ const featuredProducts = (await getCollection('products'))
       </div>
     </section>
 
-    <!-- ===================== BLOG — najnowsze wpisy ===================== -->
     <section class="section blog-teaser" id="blog" aria-labelledby="blog-title">
       <div class="container">
         <div class="row align-items-end gy-4 section-head">
@@ -484,7 +470,6 @@ const featuredProducts = (await getCollection('products'))
       </div>
     </section>
 
-    <!-- ===================== SKLEP — wyróżnione produkty ===================== -->
     <section class="section section--soft shop-teaser" id="sklep" aria-labelledby="shop-title">
       <div class="container">
         <div class="row align-items-end gy-4 section-head">
@@ -509,7 +494,6 @@ const featuredProducts = (await getCollection('products'))
       </div>
     </section>
 
-    <!-- ===================== CTA ===================== -->
     <section class="cta" aria-labelledby="cta-title">
       <img class="cta__image" data-parallax="0.1" data-city="ctaImage" src={url('assets/images/cta-bay.webp')} width="1920" height="1000" loading="lazy" decoding="async" alt="Zatoka z łodziami żaglowymi o zachodzie słońca">
       <div class="cta__shade" aria-hidden="true"></div>
@@ -517,7 +501,6 @@ const featuredProducts = (await getCollection('products'))
         <p class="eyebrow eyebrow--light eyebrow--center" data-reveal>Twój pobyt</p>
         <h2 class="cta__title" id="cta-title" data-reveal data-split>Zostań, aż zajdzie <em>słońce</em></h2>
         <p class="cta__text" data-reveal data-city="ctaText">Wybierz daty i pokój — pokażemy, jak mógłby wyglądać Twój pobyt w Barcelonie.</p>
-        <!-- Wrapper: animacja pojawiania ustawia transform, który nadpisałby uniesienie przycisku przy hover -->
         <div data-reveal>
           <a class="btn btn-accent btn-lg-pill" href="#rezerwacja" data-action="focus-booking">Sprawdź dostępność</a>
         </div>
@@ -526,7 +509,6 @@ const featuredProducts = (await getCollection('products'))
   </main>
 
   <Fragment slot="po-stopce">
-    <!-- ===================== PANEL WYBORU POKOI (offcanvas) ===================== -->
     <div class="offcanvas offcanvas-end room-panel" tabindex="-1" id="roomPanel" aria-labelledby="roomPanelTitle">
       <div class="offcanvas-header room-panel__header">
         <div>
@@ -542,7 +524,7 @@ const featuredProducts = (await getCollection('products'))
       <div class="offcanvas-body room-panel__body">
         <div class="row g-0 h-100">
           <div class="col-lg-5 room-panel__list-col">
-            <ul class="room-list" id="roomList"><!-- uzupełniane przez JS na podstawie sekcji #pokoje --></ul>
+            <ul class="room-list" id="roomList"></ul>
             <p class="side-note room-panel__note">Cena za pokój za noc. Dodatki i wycieczki wybierzesz w następnym kroku.</p>
           </div>
           <div class="col-lg-7 d-none d-lg-block room-panel__preview-col">
@@ -558,7 +540,6 @@ const featuredProducts = (await getCollection('products'))
       </div>
     </div>
 
-    <!-- ===================== GALERIA — PODGLĄD (modal) ===================== -->
     <div class="modal fade lightbox" id="galleryModal" tabindex="-1" aria-labelledby="lightboxCaption">
       <div class="modal-dialog modal-fullscreen">
         <div class="modal-content lightbox__content">
@@ -575,17 +556,6 @@ const featuredProducts = (await getCollection('products'))
       </div>
     </div>
 
-    <!-- ===================== POWIADOMIENIA (toast) ===================== -->
-    <div class="toast-container position-fixed p-3 es-toast-container">
-      <div class="toast es-toast" id="appToast" role="status" aria-live="polite" aria-atomic="true">
-        <div class="es-toast__body">
-          <p class="es-toast__title" id="appToastTitle"></p>
-          <p class="es-toast__text" id="appToastText"></p>
-        </div>
-        <button type="button" class="icon-btn es-toast__close" data-bs-dismiss="toast" aria-label="Zamknij powiadomienie"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-close"/></svg></button>
-      </div>
-    </div>
-
-
+    <Toast />
   </Fragment>
 </Layout>

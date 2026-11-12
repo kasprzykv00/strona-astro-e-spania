@@ -1,16 +1,7 @@
-/* =========================================================
-   e-spania — słownik: hiszpański (ES)
-   Format: "tekst po polsku": "tłumaczenie". Klucz musi być dokładnie taki jak w HTML/JS
-   (spacje na początku i końcu nie mają znaczenia). Tekst bez wpisu zostaje po polsku.
-   {nazwa} — miejsce na wartość wstawianą przez JS. Tablica — liczba pojedyncza i mnoga.
-   Etap 1: nagłówek, stopka, komunikaty i strona główna. Etap 2: sklep, rezerwacja, płatność i konto. Etap 3: blog.
-   ========================================================= */
 window.ES_I18N = window.ES_I18N || {};
 window.ES_I18N.es = {
-  /* ---------- Tytuł strony ---------- */
   "e-spania — hotele w Barcelonie, Maladze i Madrycie | Rezerwacja": "e-spania — hoteles en Barcelona, Málaga y Madrid | Reservas",
 
-  /* ---------- Nagłówek i menu (wszystkie strony) ---------- */
   "Przejdź do treści": "Saltar al contenido",
   "Nawigacja główna": "Navegación principal",
   "e-spania — strona główna": "e-spania — página de inicio",
@@ -34,7 +25,6 @@ window.ES_I18N.es = {
   "Nie udało się zmienić języka": "No se pudo cambiar el idioma",
   "Przeglądarka blokuje zapis ustawień. Spróbuj w zwykłym oknie.": "El navegador bloquea el guardado de ajustes. Prueba en una ventana normal.",
 
-  /* ---------- Stopka (wszystkie strony) ---------- */
   "Hotele w Barcelonie, Maladze i Madrycie. Spokojny rytm, jasne wnętrza i hiszpańskie światło.": "Hoteles en Barcelona, Málaga y Madrid. Un ritmo tranquilo, interiores luminosos y luz española.",
   "Odkryj": "Descubre",
   "Moje konto": "Mi cuenta",
@@ -46,13 +36,11 @@ window.ES_I18N.es = {
   "Do góry": "Volver arriba",
   "Zamknij powiadomienie": "Cerrar notificación",
 
-  /* ---------- Liczebniki ---------- */
   "gość|gości|gości": ["huésped", "huéspedes"],
   "gościa|gości|gości": ["huésped", "huéspedes"],
   "dorosły|dorosłych|dorosłych": ["adulto", "adultos"],
   "noc|noce|nocy": ["noche", "noches"],
 
-  /* ---------- Hero i wyszukiwanie pobytu ---------- */
   "Basen z turkusową mozaiką przed bielonym domem z kamiennym murem, kwitnącą bugenwillą i palmą": "Piscina con mosaico turquesa frente a una casa encalada con muro de piedra, buganvilla en flor y una palmera",
   "Sprawdź dostępność pobytu": "Consulta la disponibilidad",
   "Wybierz hotel": "Elige un hotel",
@@ -90,7 +78,6 @@ window.ES_I18N.es = {
   "Dodano: {room}": "Añadida: {room}",
   "Wybierz daty przyjazdu i wyjazdu, a następnie kliknij „Sprawdź dostępność”.": "Elige las fechas de llegada y salida y pulsa «Ver disponibilidad».",
 
-  /* ---------- Miasta (teksty z main.js i wersja barcelońska z HTML) ---------- */
   "Wyświetlasz hotel e-spania {loc}.": "Estás viendo el hotel e-spania de {city}.",
   "Odkryj hotel {loc}": "Descubre el hotel de {city}",
   "Wybór pokoju · {city}": "Elige habitación · {city}",
@@ -101,7 +88,6 @@ window.ES_I18N.es = {
   "Wybierz daty i pokój — pokażemy, jak mógłby wyglądać Twój pobyt w Barcelonie.": "Elige las fechas y la habitación y te mostraremos cómo podría ser tu estancia en Barcelona.",
   "Jeden dzień w Barcelonie — od poranka do późnego wieczoru. Wycieczki z przewodnikiem dodasz do pobytu przy rezerwacji.": "Un día en Barcelona, de la mañana a la noche. Las excursiones guiadas las añades a tu estancia al reservar.",
 
-  // Barcelona
   "Barcelona, gdzie miasto": "Barcelona, donde la ciudad",
   "spotyka morze": "se encuentra con el mar",
   "we własnym tempie": "a tu propio ritmo",
@@ -123,7 +109,6 @@ window.ES_I18N.es = {
   "Wąska, mokra od deszczu uliczka Dzielnicy Gotyckiej prowadząca do oświetlonej wieży katedry": "Callejuela estrecha y mojada por la lluvia del Barrio Gótico que lleva a la torre iluminada de la catedral",
   "Zatoka z łodziami żaglowymi o zachodzie słońca": "Bahía con veleros al atardecer",
 
-  // Malaga
   "Malaga w rytmie": "Málaga al ritmo del",
   "andaluzyjskiego słońca": "sol andaluz",
   "Andaluzyjski dzień": "Un día andaluz",
@@ -145,7 +130,6 @@ window.ES_I18N.es = {
   "Spacer do latarni La Farola i na plażę La Malagueta, gdy upał już odpuszcza.": "Un paseo hasta el faro de La Farola y la playa de La Malagueta cuando el calor ya afloja.",
   "Biała latarnia La Farola i palmy nad wodą portu w Maladze": "El faro blanco de La Farola y palmeras junto al agua del puerto de Málaga",
 
-  // Madryt
   "Madryt, stolica": "Madrid, capital",
   "sztuki i późnych wieczorów": "del arte y de las noches largas",
   "Spokojna baza": "Una base tranquila",
@@ -168,11 +152,9 @@ window.ES_I18N.es = {
   "Arkady i ceglane kamienice Plaza Mayor w Madrycie, pod nimi spacerowicze": "Soportales y edificios de ladrillo de la Plaza Mayor de Madrid, con paseantes debajo",
   "Dachy Madrytu i kopuła budynku Metropolis przy Gran Vía o zachodzie słońca": "Tejados de Madrid y la cúpula del edificio Metrópolis en la Gran Vía al atardecer",
 
-  /* ---------- Hotel ---------- */
   "Bielona fasada z drewnianymi okiennicami i palmą na tle błękitnego nieba": "Fachada encalada con contraventanas de madera y una palmera bajo el cielo azul",
   "Patio z drzewkami cytrynowymi w terakotowych donicach": "Patio con limoneros en macetas de terracota",
 
-  /* ---------- Pokoje ---------- */
   "02 — Pokoje": "02 — Habitaciones",
   "Cztery sposoby na": "Cuatro maneras de",
   "dobry sen": "dormir bien",
@@ -207,7 +189,6 @@ window.ES_I18N.es = {
   "Prywatny balkon, najwięcej przestrzeni i wieczory, które kończą się dopiero po zachodzie słońca.": "Balcón privado, el mayor espacio y noches que terminan cuando ya se ha puesto el sol.",
   "balkon": "balcón",
 
-  /* ---------- Panel wyboru pokoi ---------- */
   "Pokoje i suity": "Habitaciones y suites",
   "Wybierz pokój, a dodamy go do wyszukiwania.": "Elige una habitación y la añadiremos a tu búsqueda.",
   "{stay}. Wybierz pokój, a dodamy go do wyszukiwania.": "{stay}. Elige una habitación y la añadiremos a tu búsqueda.",
@@ -216,7 +197,6 @@ window.ES_I18N.es = {
   "Wybrano": "Elegida",
   "Cena za pokój za noc. Dodatki i wycieczki wybierzesz w następnym kroku.": "Precio por habitación y noche. Los extras y las excursiones los eliges en el siguiente paso.",
 
-  /* ---------- Doświadczenia ---------- */
   "03 — Doświadczenia": "03 — Experiencias",
   "Dni, które": "Días que",
   "same się układają": "se organizan solos",
@@ -224,7 +204,6 @@ window.ES_I18N.es = {
   "Popołudnie": "Tarde",
   "Wieczór": "Noche",
 
-  /* ---------- Galeria ---------- */
   "04 — Galeria": "04 — Galería",
   "Hiszpania": "España",
   "w detalach": "en detalle",
@@ -240,7 +219,6 @@ window.ES_I18N.es = {
   "Poprzednie zdjęcie": "Foto anterior",
   "Następne zdjęcie": "Foto siguiente",
 
-  /* ---------- Opinie ---------- */
   "05 — Opinie": "05 — Opiniones",
   "Głosy": "Voces de",
   "gości": "nuestros huéspedes",
@@ -255,7 +233,6 @@ window.ES_I18N.es = {
   "Malaga, październik 2026": "Málaga, octubre de 2026",
   "Madryt, sierpień 2026": "Madrid, agosto de 2026",
 
-  /* ---------- Blog — najnowsze wpisy ---------- */
   "Przed podróżą do": "Antes de tu viaje a",
   "Hiszpanii": "España",
   "Praktyczne porady dla osób, które planują wyjazd: kiedy jechać, co zjeść, co zwiedzić i jak odnaleźć się w hiszpańskim rytmie dnia.": "Consejos prácticos para planificar el viaje: cuándo ir, qué comer, qué visitar y cómo adaptarse al ritmo del día en España.",
@@ -277,7 +254,6 @@ window.ES_I18N.es = {
   ": Andaluzja w tydzień": ": Andalucía en una semana",
   "Wszystkie wpisy na blogu": "Todas las entradas del blog",
 
-  /* ---------- Sklep — wyróżnione produkty ---------- */
   "07 — Sklep": "07 — Tienda",
   "Hiszpania, którą": "La España que",
   "zabierzesz do domu": "te llevas a casa",
@@ -304,12 +280,10 @@ window.ES_I18N.es = {
   "Zobacz": "Ver",
   "Wszystkie produkty": "Todos los productos",
 
-  /* ---------- Końcowe CTA ---------- */
   "Twój pobyt": "Tu estancia",
   "Zostań, aż zajdzie": "Quédate hasta que",
   "słońce": "se ponga el sol",
 
-  /* ---------- Etap 2: Wspólne elementy sklepu ---------- */
   "Strona główna": "Inicio",
   "breadcrumb": "ruta de navegación",
   "Nawigacja okruszkowa": "Ruta de navegación",
@@ -330,7 +304,6 @@ window.ES_I18N.es = {
   "4,6": "4,6",
   "5,0": "5,0",
 
-  /* ---------- Etap 2: Sklep (sklep.html) ---------- */
   "Sklep hotelowy — ceramika, ręczniki, świece i vouchery | e-spania": "Tienda del hotel — cerámica, toallas, velas y vales | e-spania",
   "Stos złożonych ręczników w piaskowe i granatowe pasy": "Pila de toallas dobladas con rayas arena y azul marino",
   "Sklep:": "Tienda:",
@@ -371,7 +344,6 @@ window.ES_I18N.es = {
   "Poprzednia strona": "Página anterior",
   "Następna strona": "Página siguiente",
 
-  /* ---------- Etap 2: Produkty (shop-data.js i karty w HTML) ---------- */
   "Oliwa z oliwek Arbequina": "Aceite de oliva Arbequina",
   ": Oliwa z oliwek Arbequina": ": Aceite de oliva Arbequina",
   "Zestaw upominkowy Regalo": "Set de regalo Regalo",
@@ -412,7 +384,6 @@ window.ES_I18N.es = {
   "Dwa ręcznie malowane talerze w kolorach południa. Każdy powstaje osobno, więc nigdy nie dostaniesz dwóch identycznych.": "Dos platos pintados a mano con los colores del sur. Cada uno se hace por separado, así que nunca recibirás dos iguales.",
   "Sol powstają w rodzinnej pracowni ceramicznej, która maluje je pędzlem na surowym szkliwie. Świetnie wyglądają zarówno na stole, jak i na ścianie, a szkliwo jest bezpieczne w kontakcie z żywnością.": "Los platos Sol se hacen en un taller familiar de cerámica que los pinta a pincel sobre el esmalte crudo. Quedan igual de bien en la mesa que en la pared, y el esmalte es apto para alimentos.",
 
-  /* ---------- Etap 2: Parametry i warianty produktów ---------- */
   "Materiał": "Material",
   "Wymiary": "Medidas",
   "Gramatura": "Gramaje",
@@ -494,7 +465,6 @@ window.ES_I18N.es = {
   "Słońce i terakota": "Sol y terracota",
   "Morze i oliwka": "Mar y oliva",
 
-  /* ---------- Etap 2: Karta produktu (produkt.html) ---------- */
   "{name} — sklep hotelowy | e-spania": "{name} — tienda del hotel | e-spania",
   "Ręcznik plażowy Costa — sklep hotelowy | e-spania": "Toalla de playa Costa — tienda del hotel | e-spania",
   "Pokaż zdjęcie {n} z {total}": "Ver foto {n} de {total}",
@@ -532,7 +502,6 @@ window.ES_I18N.es = {
   "Kolory są intensywniejsze niż na zdjęciu. Wiszą u nas w kuchni.": "Los colores son más intensos que en la foto. Los tenemos colgados en la cocina.",
   "Ładne rzemiosło, a różnice między talerzami dodają im uroku.": "Buena artesanía; las diferencias entre los platos les dan encanto.",
 
-  /* ---------- Etap 2: Koszyk (koszyk.html) ---------- */
   "Koszyk | Sklep e-spania": "Cesta | Tienda e-spania",
   "Koszyk": "Cesta",
   "Twój": "Tu",
@@ -561,7 +530,6 @@ window.ES_I18N.es = {
   "Kod {code} aktywny: rabat {percent}% na produkty.": "Código {code} activo: {percent} % de descuento en productos.",
   "Ten kod jest nieprawidłowy lub stracił ważność.": "Este código no es válido o ha caducado.",
 
-  /* ---------- Etap 2: Kasa (zamowienie.html) ---------- */
   "Kasa — dane i dostawa | Sklep e-spania": "Caja — datos y envío | Tienda e-spania",
   "Kasa": "Caja",
   "Sprawdź formularz": "Revisa el formulario",
@@ -618,7 +586,6 @@ window.ES_I18N.es = {
   "Zamówienie: {count}": "Pedido: {count}",
   "pozycja|pozycje|pozycji": ["artículo", "artículos"],
 
-  /* ---------- Etap 2: Rezerwacja (rezerwacja.html) ---------- */
   "Rezerwacja pobytu — pokój, dodatki i wycieczki | e-spania": "Reserva tu estancia — habitación, extras y excursiones | e-spania",
   "Zaplanuj": "Planea",
   "swój pobyt": "tu estancia",
@@ -699,7 +666,6 @@ window.ES_I18N.es = {
   "8 godzin": "8 horas",
   "10 godzin": "10 horas",
 
-  /* ---------- Etap 2: Płatność (platnosc.html) ---------- */
   "Płatność | e-spania": "Pago | e-spania",
   "Płatność": "Pago",
   "Nie ma nic do opłacenia. Wybierz pobyt lub produkty, a wrócisz tu na końcu.": "No hay nada que pagar. Elige una estancia o productos y volverás aquí al final.",
@@ -722,7 +688,6 @@ window.ES_I18N.es = {
   "Wróć": "Volver",
   "Przetwarzanie płatności…": "Procesando el pago…",
 
-  /* ---------- Etap 2: Konto (konto.html) ---------- */
   "Moje konto — rezerwacje i zamówienia | e-spania": "Mi cuenta — reservas y pedidos | e-spania",
   "Moje": "Mi",
   "konto": "cuenta",
@@ -784,7 +749,6 @@ window.ES_I18N.es = {
   "Rezerwacja {ref} jest opłacona. Szczegóły i odliczanie znajdziesz poniżej.": "La reserva {ref} está pagada. Abajo tienes los detalles y la cuenta atrás.",
   "Zamówienie {ref} jest opłacone i trafiło do realizacji.": "El pedido {ref} está pagado y en preparación.",
 
-  /* ---------- Etap 3: Archiwum bloga (blog.html, blog-2.html, blog-3.html) ---------- */
   "Blog o Hiszpanii — porady przed podróżą | e-spania": "Blog sobre España — consejos antes del viaje | e-spania",
   "Blog o Hiszpanii — strona 2 z 3 | e-spania": "Blog sobre España — página 2 de 3 | e-spania",
   "Blog o Hiszpanii — strona 3 z 3 | e-spania": "Blog sobre España — página 3 de 3 | e-spania",
@@ -825,7 +789,6 @@ window.ES_I18N.es = {
   "Miniatura: spakowana walizka i kapelusz": "Miniatura: una maleta hecha y un sombrero",
   "Co zabrać do Hiszpanii? Lista rzeczy do spakowania": "¿Qué llevar a España? Lista para hacer la maleta",
 
-  /* ---------- Etap 3: Karty wpisów ---------- */
   "Pusta, brukowana uliczka między kamienicami z balkonami w Madrycie": "Calle empedrada y vacía entre edificios con balcones en Madrid",
   "Sjesta w Hiszpanii: godziny otwarcia sklepów i rytm dnia": "La siesta en España: horarios de las tiendas y ritmo del día",
   "W wielu hiszpańskich miastach życie zwalnia wczesnym popołudniem, a kolacja zaczyna się znacznie później niż w Polsce. Wyjaśniamy, jak zaplanować zakupy, posiłki i zwiedzanie, żeby nie trafić na zamknięte drzwi.": "En muchas ciudades españolas la vida se ralentiza a primera hora de la tarde y la cena empieza mucho más tarde que en Polonia. Te explicamos cómo planificar compras, comidas y visitas para no encontrarte las puertas cerradas.",
@@ -875,7 +838,6 @@ window.ES_I18N.es = {
   "Hiszpania to bezpieczny kierunek, ale w zatłoczonych miejscach turystycznych zdarzają się kradzieże kieszonkowe. Zebraliśmy proste zasady, które pomogą zadbać o portfel, telefon i dokumenty.": "España es un destino seguro, pero en los lugares turísticos concurridos hay hurtos. Hemos reunido unas reglas sencillas para cuidar la cartera, el móvil y la documentación.",
   ": Bezpieczeństwo w Hiszpanii": ": Seguridad en España",
 
-  /* ---------- Etap 3: Artykuł (single.html) ---------- */
   "Kiedy jechać do Hiszpanii? Pogoda i sezony | e-spania": "¿Cuándo viajar a España? El tiempo y las temporadas | e-spania",
   "Kiedy jechać do Hiszpanii?": "¿Cuándo viajar a España?",
   "Data publikacji": "Publicado",

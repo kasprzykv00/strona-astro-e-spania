@@ -1,13 +1,10 @@
 ---
-// Pasek boczny bloga: wyszukiwarka (makieta), kategorie z liczbą wpisów, polecane artykuły.
-// Kategorie i polecane wpisy liczą się same z plików .md (pole „featured” we wpisie).
 import { getCollection } from 'astro:content';
 import { url } from '../utils/url.js';
 import { longDate, isoDate } from '../utils/format.js';
 
 const posts = (await getCollection('blog')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
-// Kolejność kategorii jak na starej stronie; nowe kategorie trafią na koniec listy
 const ORDER = ['Planowanie podróży', 'Zwiedzanie', 'Kuchnia', 'Kultura i zwyczaje', 'Praktyczne porady'];
 const counts = new Map();
 posts.forEach((post) => counts.set(post.data.category, (counts.get(post.data.category) || 0) + 1));

@@ -1,7 +1,4 @@
 ---
-// Karta produktu: /sklep/<nazwa-pliku>/
-// Wszystkie dane pochodzą z pliku src/content/products/<nazwa-pliku>.md
-// (skrypt js/shop.js dokłada tylko interakcje: zmiana zdjęcia, cena wariantu, dodawanie do koszyka).
 import { getCollection, render } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import ProductCard from '../../components/ProductCard.astro';
@@ -13,7 +10,6 @@ import { money, ratingText, reviewWord } from '../../utils/format.js';
 export async function getStaticPaths() {
   const products = await getCollection('products');
   return products.map((product) => {
-    // „Mogą Cię również zainteresować”: najpierw ta sama kategoria, potem najpopularniejsze
     const related = products
       .filter((item) => item.id !== product.id)
       .sort((a, b) => Number(b.data.category === product.data.category) - Number(a.data.category === product.data.category) || b.data.popularity - a.data.popularity)
@@ -23,7 +19,7 @@ export async function getStaticPaths() {
 }
 
 const { product, related } = Astro.props;
-const { Content } = await render(product);   // „Pełny opis” = treść pliku .md
+const { Content } = await render(product);
 const p = product.data;
 const pageUrl = `sklep/${product.id}/`;
 

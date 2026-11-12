@@ -1,39 +1,24 @@
-/* =========================================================
-   e-spania — sklep, koszyk, rezerwacja, płatność i konto
-   Nie ma backendu: dane klienta żyją w pamięci przeglądarki (localStorage).
-   Każdy moduł działa tylko na swojej stronie — wybiera go <body data-page="…">.
-   Dane produktów i cen są w shop-data.js, pomocnicze funkcje w main.js (window.ES).
-   ========================================================= */
 (() => {
   'use strict';
 
   const { qs, qsa, toISO, fromISO, addDays, nightsBetween, notify, t, tn, tw, lang, locale } = window.ES;
   const { products, rooms, extras, excursions, cities, delivery, payments, discountCodes } = window.ES_DATA;
-  // Adres strony z Astro (np. /strona-astro-e-spania/) — od niego budujemy linki do podstron
   const BASE = window.ES_BASE || '';
   const productUrl = (id) => `${BASE}sklep/${id}/`;
 
-  /* ---------- Pomocnicze ---------- */
-
-  // Wersje językowe: dane w shop-data.js i w localStorage zostają po polsku (od nich zależą ceny
-  // i warianty), a tłumaczymy dopiero tekst wyświetlany na stronie — przez t() z main.js.
-  // Kwoty zawsze w złotych, w polskim zapisie (jak ceny w HTML).
   const moneyFormat = (fraction) => new Intl.NumberFormat('pl-PL', { style: 'currency', currency: 'PLN', minimumFractionDigits: fraction, maximumFractionDigits: 2 });
   const money = (value) => moneyFormat(Number.isInteger(value) ? 0 : 2).format(value);
   const longDate = new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'long', year: 'numeric' });
   const shortDate = new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short' });
   const monthName = new Intl.DateTimeFormat(locale, { month: 'long', year: 'numeric' });
-  // Skróty dni tygodnia od poniedziałku (1.01.2024 to poniedziałek)
   const WEEKDAYS_SHORT = lang === 'pl'
     ? ['Pn', 'Wt', 'Śr', 'Cz', 'Pt', 'So', 'Nd']
     : Array.from({ length: 7 }, (_, i) => new Intl.DateTimeFormat(locale, { weekday: 'short' }).format(new Date(2024, 0, 1 + i)));
-  // Sposób płatności zapisany po polsku, np. „Karta •••• 4417” albo „Szybki przelew · mBank”
   const paidWithText = (value) => String(value).replace(/^(Karta płatnicza|Szybki przelew|Karta)(?= |$)/, (name) => t(name));
   const formatDate = (iso) => longDate.format(fromISO(iso));
   const formatStay = (start, end) => `${shortDate.format(fromISO(start))} – ${longDate.format(fromISO(end))}`;
   const round2 = (value) => Math.round(value * 100) / 100;
 
-  // Tekst od użytkownika wstawiany do HTML musi być bezpieczny (imię, adres, uwagi)
   function esc(value) {
     const box = document.createElement('div');
     box.textContent = value == null ? '' : String(value);
@@ -58,8 +43,6 @@
   const ratingText = (rating) => rating.toLocaleString(locale, { minimumFractionDigits: 1, maximumFractionDigits: 1 });
   const reviewWord = (count) => tw(count, ['opinia', 'opinie', 'opinii']);
 
-  /* ---------- Pamięć przeglądarki ---------- */
-  // Gdy localStorage jest niedostępny (np. tryb prywatny), dane żyją do odświeżenia strony
   const memory = {};
   const store = {
     get(key, fallback) {
@@ -74,18 +57,16 @@
       memory[key] = value;
       try {
         localStorage.setItem(key, JSON.stringify(value));
-      } catch (e) { /* zostaje kopia w pamięci */ }
+      } catch (e) {}
     },
     remove(key) {
       delete memory[key];
       try {
         localStorage.removeItem(key);
-      } catch (e) { /* brak dostępu — nic do usunięcia */ }
+      } catch (e) {}
     },
   };
 
-  /* ---------- Ceny pobytu ---------- */
-  // Wspólne wyliczenie dla formularza rezerwacji, danych startowych i konta
   function priceStay({ roomId, arrival, departure, adults, children, extraIds, trips }) {
     const room = findRoom(roomId);
     const nights = arrival && departure ? nightsBetween(arrival, departure) : 0;
@@ -98,15 +79,11 @@
       const factor = { 'person-night': guests * nights, night: nights, stay: 1 }[extra.unit];
       return { id: extra.id, name: extra.name, amount: extra.price * factor };
     });
-    // Etykiety linii są tekstem do wyświetlenia (podsumowanie, płatność), więc od razu tłumaczone
     chosenExtras.forEach((extra) => lines.push({ label: t(extra.name), amount: extra.amount }));
     trips.forEach((trip) => lines.push({ label: `${t(trip.name)} · ${tn(guests, ['os.', 'os.', 'os.'])}`, amount: trip.price * guests }));
     return { nights, guests, lines, chosenExtras, total: lines.reduce((sum, line) => sum + line.amount, 0) };
   }
 
-  /* ---------- Dane startowe ---------- */
-  // Przy pierwszej wizycie koszyk ma 2 produkty, a konto przykładową historię,
-  // żeby każdą stronę dało się ocenić od razu po otwarciu.
   const DEFAULT_PROFILE = { firstName: 'Anna', lastName: 'Nowak', email: 'anna.nowak@example.com', phone: '+48 600 100 200', street: 'ul. Słoneczna 12/4', postal: '00-120', city: 'Warszawa', newsletter: true };
 
   function makeBooking(ref, city, arrival, departure, roomId, extraIds, tripIds, paidWith) {
@@ -147,7 +124,6 @@
     store.set('es-seeded', true);
   }
 
-  /* ---------- Koszyk ---------- */
   const getCart = () => store.get('es-cart', []).filter((line) => findProduct(line.id));
 
   function saveCart(cart) {
@@ -176,11 +152,10 @@
       badge.textContent = count;
       badge.hidden = count === 0;
       const link = badge.closest('a');
-      if (link) link.setAttribute('aria-label', window.ES.t('Koszyk, liczba produktów: {n}', { n: count }));
+      if (link) link.setAttribute('aria-label', t('Koszyk, liczba produktów: {n}', { n: count }));
     });
   }
 
-  // Pozycje koszyka z ceną; rabat naliczany jest od wartości produktów
   function cartSummary(deliveryPrice) {
     const lines = getCart().map((line) => {
       const product = findProduct(line.id);
@@ -195,7 +170,6 @@
     return { lines, subtotal, code, rate, discount, shipping, total: round2(subtotal - discount + shipping) };
   }
 
-  /* ---------- Karta produktu (sklep, rekomendacje) ---------- */
   function productPriceHTML(product) {
     const from = product.priceFrom ? t('od {price}', { price: '' }) : '';
     if (!product.oldPrice) return `<p class="product-price">${from}${money(product.price)}</p>`;
@@ -221,7 +195,6 @@
       </div>`;
   }
 
-  /* ---------- Sklep: filtry, sortowanie, paginacja (sklep.html) ---------- */
   function initCatalog() {
     const PER_PAGE = 6;
     const form = qs('#shopFilterForm');
@@ -240,7 +213,7 @@
       popular: (a, b) => b.popularity - a.popularity,
       'price-asc': (a, b) => a.price - b.price,
       'price-desc': (a, b) => b.price - a.price,
-      name: (a, b) => collator.compare(t(a.name), t(b.name)),   // alfabetycznie w wybranym języku
+      name: (a, b) => collator.compare(t(a.name), t(b.name)),
     };
     const checkedValues = (name) => qsa(`input[data-group="${name}"]:checked`, form).map((input) => input.value);
 
@@ -277,7 +250,6 @@
       page = Math.min(page, pages);
       const visible = list.slice((page - 1) * PER_PAGE, page * PER_PAGE).map((p) => p.id);
 
-      // Kolejność w DOM odpowiada sortowaniu, dzięki czemu tabulacja idzie po kolei
       list.forEach((p) => grid.append(items.find((el) => el.dataset.product === p.id)));
       items.forEach((el) => { el.hidden = !visible.includes(el.dataset.product); });
 
@@ -291,7 +263,6 @@
     priceEl.addEventListener('input', () => { page = 1; apply(); });
     sortEl.addEventListener('change', () => { page = 1; apply(); });
     form.addEventListener('submit', (event) => event.preventDefault());
-    // Przycisk „Wyczyść filtry”: reset formularza zmienia pola dopiero po zdarzeniu
     form.addEventListener('reset', () => window.setTimeout(() => { page = 1; apply(); }, 0));
     qs('#productEmptyReset').addEventListener('click', () => form.reset());
 
@@ -308,10 +279,8 @@
     apply();
   }
 
-  /* ---------- Karta produktu (produkt.html?id=…) ---------- */
   function initProduct() {
-    // Astro wpisuje id produktu w <body data-product-id="…">
-    const product = findProduct(document.body.dataset.productId || new URLSearchParams(window.location.search).get('id')) || products[0];
+    const product = findProduct(document.body.dataset.productId);
     const variantEl = qs('#productVariant');
     const qtyEl = qs('#productQty');
     const mainImage = qs('#productImage');
@@ -329,7 +298,6 @@
       ? `<i class="bi bi-check-circle" aria-hidden="true"></i> ${t('W magazynie, wysyłka w 24 godziny')}`
       : `<i class="bi bi-hourglass-split" aria-hidden="true"></i> ${t('Na zamówienie, wysyłka do 10 dni')}`;
     qs('#productStock').classList.toggle('product-stock--order', !product.inStock);
-    // Opis po polsku jest już na stronie (z pliku .md); podmieniamy go tylko w wersji EN/ES
     if (lang !== 'pl') qs('#productDescription').textContent = t(product.description);
     qs('#productSpecs').innerHTML = product.specs.map(([key, value]) => `<tr><th scope="row">${t(key)}</th><td>${t(value)}</td></tr>`).join('');
     qs('#productReviewsSummary').innerHTML = `${starsHTML(product.rating)}<span>${ratingText(product.rating)} ${t('na 5')} · ${product.reviewsCount} ${reviewWord(product.reviewsCount)}</span>`;
@@ -339,7 +307,6 @@
         <p class="product-review__author">${review.author} · ${t(review.date)}</p>
       </li>`).join('');
     qs('#productVariantLabel').textContent = t(product.variant.label);
-    // Wartość opcji zostaje po polsku (od niej zależy cena i zapis w koszyku), tłumaczymy tylko napis
     variantEl.innerHTML = product.variant.options.map((option) => `<option value="${esc(option.label)}">${t(option.label)}</option>`).join('');
 
     function renderPrice() {
@@ -371,20 +338,17 @@
     renderPrice();
     variantEl.addEventListener('change', renderPrice);
 
-    // „Dodaj do koszyka” to zwykły odnośnik do koszyka; JS dokłada wcześniej wybrany produkt
     qs('#addToCart').addEventListener('click', () => {
       const qty = Math.min(10, Math.max(1, Math.round(Number(qtyEl.value)) || 1));
       addToCart(product.id, variantEl.value, qty);
     });
 
-    // Rekomendacje: najpierw ta sama kategoria, potem najpopularniejsze
     const related = products
       .filter((item) => item.id !== product.id)
       .sort((a, b) => Number(b.category === product.category) - Number(a.category === product.category) || b.popularity - a.popularity)
       .slice(0, 4);
     qs('#relatedProducts').innerHTML = related.map(relatedCardHTML).join('');
 
-    // Dane strukturalne opisują produkt, który jest aktualnie widoczny (adresy pełne, jak w HTML)
     const schema = JSON.parse(qs('#productSchema').textContent);
     const node = schema['@graph'].find((item) => item['@type'] === 'Product');
     const absolute = (path) => new URL(path, window.location.href).href;
@@ -397,7 +361,6 @@
     qs('#productSchema').textContent = JSON.stringify(schema);
   }
 
-  /* ---------- Koszyk (koszyk.html) ---------- */
   function initCart() {
     const body = qs('#cartBody');
     const tableWrap = qs('#cartTableWrap');
@@ -458,7 +421,6 @@
       const cart = getCart();
       cart[index].qty = qty;
       saveCart(cart);
-      // Bez przerysowania tabeli — fokus zostaje w polu ilości
       qs('[data-line-total]', row).textContent = money(cartSummary(estimate).lines[index].total);
       renderSummary();
     });
@@ -475,7 +437,6 @@
       (next || qs('#cartEmptyLink')).focus();
     });
 
-    // Wyświetla stan kodu rabatowego pod polem
     function showCode(message, ok) {
       codeMessage.textContent = message;
       codeMessage.classList.toggle('discount-form__message--ok', ok);
@@ -506,8 +467,6 @@
     render();
   }
 
-  /* ---------- Walidacja formularzy ---------- */
-  // Komunikaty Bootstrapa przy polach + lista błędów u góry, do której przechodzi fokus
   function showErrors(form, summary) {
     form.classList.add('was-validated');
     const invalid = qsa(':invalid', form).filter((el) => el.tagName !== 'FIELDSET');
@@ -531,7 +490,6 @@
     });
   }
 
-  /* ---------- Kasa (zamowienie.html) ---------- */
   function initCheckout() {
     const form = qs('#checkoutForm');
     const summaryBox = qs('#checkoutErrors');
@@ -564,7 +522,6 @@
       if (event.target.name === 'delivery') renderSummary();
     });
 
-    // Dane firmy są wymagane tylko wtedy, gdy klient chce fakturę
     function syncInvoice() {
       const on = invoiceToggle.checked;
       invoiceFields.hidden = !on;
@@ -588,7 +545,6 @@
         type: 'order',
         method: qs('input[name="payment"]:checked', form).value,
         total: sum.total,
-        // Tytuł i linie są tylko do wyświetlenia na stronie płatności — tłumaczone od razu
         title: t('Zamówienie: {count}', { count: tn(sum.lines.length, ['pozycja', 'pozycje', 'pozycji']) }),
         lines: sum.lines.map((line) => ({ label: `${t(line.product.name)} · ${t('{n} szt.', { n: line.qty })}`, amount: line.total }))
           .concat(sum.discount ? [{ label: t('Rabat {code}', { code: sum.code }), amount: -sum.discount }] : [], [{ label: t('Dostawa: {name}', { name: t(delivery[deliveryKey].name) }), amount: sum.shipping }]),
@@ -607,7 +563,6 @@
     renderSummary();
   }
 
-  /* ---------- Rezerwacja pobytu (rezerwacja.html) ---------- */
   function initReservation() {
     const form = qs('#reservationForm');
     const errors = qs('#reservationErrors');
@@ -637,7 +592,6 @@
       }).filter((trip) => trip.id);
     }
 
-    // Lista wycieczek zależy od miasta, a daty w listach od długości pobytu
     function renderTrips() {
       const city = cityEl.value;
       qs('#tripsCity').textContent = t(cities[city].locative);
@@ -676,7 +630,6 @@
       });
     }
 
-    // Pokoje za małe dla liczby gości są wyłączone; wybór przechodzi na pierwszy pasujący
     function renderRoomLimits() {
       const total = guests();
       rooms.forEach((room) => {
@@ -700,7 +653,6 @@
       else if (arrivalEl.value && departureEl.value && nightsBetween(arrivalEl.value, departureEl.value) > MAX_NIGHTS) message = t('Pobyt może trwać maksymalnie {n} nocy.', { n: MAX_NIGHTS });
       departureEl.setCustomValidity(message);
       qs('#resDepartureFeedback').textContent = message || t('Wybierz datę wyjazdu.');
-      // Największy pokój mieści 4 osoby
       adultsEl.setCustomValidity(guests() > 4 ? t('Pokoje mieszczą maksymalnie 4 gości.') : '');
     }
 
@@ -730,12 +682,11 @@
       renderSummary();
     }
 
-    // Dane przekazane z paska na stronie głównej
     const paramCity = params.get('miasto');
     let savedCity = null;
     try {
       savedCity = localStorage.getItem('es-city');
-    } catch (e) { /* zostaje domyślne miasto */ }
+    } catch (e) {}
     cityEl.value = cities[paramCity] ? paramCity : cities[savedCity] ? savedCity : 'barcelona';
     const isDate = (value) => /^\d{4}-\d{2}-\d{2}$/.test(value || '');
     if (isDate(params.get('przyjazd'))) arrivalEl.value = params.get('przyjazd');
@@ -750,7 +701,7 @@
     cityEl.addEventListener('change', () => {
       try {
         localStorage.setItem('es-city', cityEl.value);
-      } catch (e) { /* wybór obowiązuje tylko na tej stronie */ }
+      } catch (e) {}
       renderTrips();
     });
     form.addEventListener('change', refresh);
@@ -791,9 +742,6 @@
     refresh();
   }
 
-  /* ---------- Płatność (platnosc.html) ---------- */
-  // Nie ma tu żadnej prawdziwej płatności: po sprawdzeniu formatu zapisujemy zakup na koncie.
-  // Numer karty nie jest zapisywany ani wysyłany — zostają tylko 4 ostatnie cyfry do opisu.
   function initPayment() {
     const pending = store.get('es-pending', null);
     const form = qs('#paymentForm');
@@ -828,7 +776,6 @@
     syncMethod();
     qsa('input[name="method"]', form).forEach((input) => input.addEventListener('change', syncMethod));
 
-    // Numer karty: spacje co 4 cyfry podczas pisania
     const cardEl = qs('#cardNumber');
     cardEl.addEventListener('input', () => {
       const digits = cardEl.value.replace(/\D/g, '').slice(0, 16);
@@ -836,7 +783,6 @@
     });
 
     function paidWithLabel() {
-      // Zapisujemy po polsku — na koncie tłumaczy go paidWithText()
       if (method() === 'karta') return `Karta •••• ${cardEl.value.replace(/\D/g, '').slice(-4)}`;
       if (method() === 'przelew') return `Szybki przelew · ${qs('#bankSelect').value}`;
       return payments[method()];
@@ -875,7 +821,6 @@
     });
   }
 
-  /* ---------- Konto klienta (konto.html) ---------- */
   function initAccount() {
     const ARRIVAL_HOUR = 15;
     const bookings = store.get('es-bookings', []).slice().sort((a, b) => (a.arrival < b.arrival ? 1 : -1));
@@ -982,7 +927,6 @@
         : t('Nie masz zaplanowanych pobytów. Hiszpania czeka.');
     }
 
-    // Status zamówienia jest zapisany po polsku („W realizacji”, „Wysłane”) — tłumaczymy przy wyświetlaniu
     function renderOrders() {
       qs('#ordersBody').innerHTML = orders.map((order) => `<tr>
           <th scope="row" data-label="${t('Numer')}">${esc(order.ref)}</th>
@@ -1012,7 +956,6 @@
       bootstrap.Modal.getOrCreateInstance(orderModalEl).show();
     });
 
-    /* Adres i ustawienia */
     const addressForm = qs('#addressForm');
     const addressCollapse = qs('#addressEdit');
 
@@ -1059,7 +1002,6 @@
       notify(t('Zapisano ustawienia'), t('Twoje dane zostały zaktualizowane.'));
     });
 
-    /* Komunikat po płatności */
     const params = new URLSearchParams(window.location.search);
     const paid = params.get('platnosc');
     const ref = (params.get('nr') || '').replace(/[^A-Z0-9-]/gi, '');
@@ -1071,7 +1013,6 @@
         : t('Zamówienie {ref} jest opłacone i trafiło do realizacji.', { ref });
       box.hidden = false;
       box.focus();
-      // Odświeżenie strony nie powinno pokazywać komunikatu ponownie
       window.history.replaceState(null, '', BASE + (paid === 'rezerwacja' ? 'konto/#rezerwacje' : 'konto/#zamowienia'));
     }
 
@@ -1081,7 +1022,6 @@
     renderAddress();
     renderSettings();
 
-    // Odliczanie odświeżane co minutę
     window.setInterval(() => {
       qsa('[data-countdown]').forEach((box) => {
         const booking = bookings.find((item) => item.ref === box.dataset.countdown);
@@ -1092,7 +1032,6 @@
     }, 60000);
   }
 
-  /* ---------- Start ---------- */
   seed();
   updateCartBadge();
   const modules = { sklep: initCatalog, produkt: initProduct, koszyk: initCart, zamowienie: initCheckout, rezerwacja: initReservation, platnosc: initPayment, konto: initAccount };

@@ -1,12 +1,9 @@
 ---
-// Nagłówek strony: logo, menu, język, konto, koszyk, „Rezerwuj”.
-// Sam rozpoznaje, na której stronie jest, i podświetla właściwy link.
 import { url, sekcja, isHome } from '../utils/url.js';
 
 const path = Astro.url.pathname;
 const home = isHome(path);
 const inSection = (name) => path.startsWith(url(name));
-// aria-current: „page” na stronie głównej działu, „true” na jego podstronach (np. wpis, produkt)
 const current = (name) => (path.replace(/\/$/, '') === url(name).replace(/\/$/, '') ? 'page' : inSection(name) ? 'true' : undefined);
 const cartCurrent = inSection('koszyk') || inSection('zamowienie') ? 'page' : undefined;
 ---

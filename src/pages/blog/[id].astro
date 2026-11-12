@@ -1,6 +1,4 @@
 ---
-// Pojedynczy wpis na blogu: /blog/<nazwa-pliku>/
-// Treść pochodzi z pliku src/content/blog/<nazwa-pliku>.md
 import { getCollection, render } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import Toast from '../../components/Toast.astro';
@@ -12,7 +10,6 @@ export async function getStaticPaths() {
   const posts = (await getCollection('blog')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
   return posts.map((post, i) => ({
     params: { id: post.id },
-    // poprzedni = starszy wpis, następny = nowszy (jak na starej stronie)
     props: { post, prev: posts[i + 1], next: posts[i - 1] },
   }));
 }
@@ -80,7 +77,6 @@ const schema = {
   </Fragment>
 
   <main id="main">
-    <!-- ===================== NAWIGACJA OKRUSZKOWA ===================== -->
     <nav class="post-crumbs" aria-label="breadcrumb">
       <div class="container">
         <div class="row justify-content-center">
@@ -95,7 +91,6 @@ const schema = {
       </div>
     </nav>
 
-    <!-- ===================== ARTYKUŁ ===================== -->
     <article class="post" id="artykul">
       <header class="post-header">
         <div class="container">
@@ -121,12 +116,10 @@ const schema = {
               {d.cover?.caption && <figcaption class="post-cover__caption">{d.cover.caption}</figcaption>}
             </figure>
 
-            <!-- Treść wpisu z pliku .md -->
             <div class="post-content">
               <Content />
             </div>
 
-            <!-- Stopka artykułu: tagi, udostępnianie, autor -->
             <footer class="post-footer">
               {d.tags.length > 0 && (
                 <div>
@@ -165,7 +158,6 @@ const schema = {
       <div class="row justify-content-center">
         <div class="col-lg-10 col-xl-8 col-xxl-7">
 
-          <!-- ===================== POPRZEDNI / NASTĘPNY WPIS ===================== -->
           <nav class="post-nav" aria-label="Sąsiednie wpisy">
             <div class="row gy-3 gx-4">
               <div class="col-md-6">
@@ -187,7 +179,6 @@ const schema = {
             </div>
           </nav>
 
-          <!-- ===================== KOMENTARZE (makieta, komentarze z pliku .md) ===================== -->
           <section class="comments" id="komentarze" aria-labelledby="comments-title">
             <h2 class="comments__title" id="comments-title">Komentarze <span class="comments__count">({commentCount})</span></h2>
 

@@ -1,8 +1,3 @@
-/* =========================================================
-   e-spania — interakcje wspólne (nagłówek, strona główna, blog)
-   Bez frameworków: czysty JavaScript + komponenty Bootstrap 5.
-   Sklep, rezerwacja, płatność i konto są w shop.js (korzysta z window.ES).
-   ========================================================= */
 (() => {
   'use strict';
 
@@ -11,11 +6,6 @@
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   const scrollBehavior = () => (reduceMotion.matches ? 'auto' : 'smooth');
 
-  /* ---------- Wersje językowe (PL / EN / ES) ---------- */
-  // Słowniki: js/i18n-en.js i js/i18n-es.js w formacie { 'tekst po polsku': 'tłumaczenie' }.
-  // Przy wczytaniu strony podmieniamy teksty i atrybuty (alt, aria-label, title), które są w słowniku;
-  // teksty tworzone w JS przechodzą przez t() i tn(). Wybór języka zapisujemy w localStorage
-  // ('es-lang') i przeładowujemy stronę — tłumaczenie dzieje się zanim ruszą pozostałe moduły.
   const LOCALES = { pl: 'pl-PL', en: 'en-GB', es: 'es-ES' };
   const lang = (() => {
     try {
@@ -27,22 +17,17 @@
   })();
   const locale = LOCALES[lang];
   const dict = (lang !== 'pl' && window.ES_I18N && window.ES_I18N[lang]) || {};
-  // Atrybuty z tekstem dla użytkownika (data-label — nagłówki tabel w widoku mobilnym,
-  // data-demo-* — komunikaty formularzy bloga)
   const TRANSLATED_ATTRS = ['alt', 'aria-label', 'title', 'placeholder', 'data-label', 'data-demo-title', 'data-demo-text'];
 
   const lookup = (text) => (Object.prototype.hasOwnProperty.call(dict, text) ? dict[text] : undefined);
 
-  // Daty w treści, np. „27 października 2026”, zapisujemy w formacie wybranego języka
   const MONTHS_PL = ['stycznia', 'lutego', 'marca', 'kwietnia', 'maja', 'czerwca', 'lipca', 'sierpnia', 'września', 'października', 'listopada', 'grudnia'];
   const DATE_PL = new RegExp(`^(\\d{1,2}) (${MONTHS_PL.join('|')}) (\\d{4})$`);
   const longDateFormat = new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'long', year: 'numeric' });
-  // …oraz miesiące z rokiem, np. „wrzesień 2026” (data pobytu w opiniach)
   const MONTHS_NOM_PL = ['styczeń', 'luty', 'marzec', 'kwiecień', 'maj', 'czerwiec', 'lipiec', 'sierpień', 'wrzesień', 'październik', 'listopad', 'grudzień'];
   const MONTH_PL = new RegExp(`^(${MONTHS_NOM_PL.join('|')}) (\\d{4})$`);
   const monthYearFormat = new Intl.DateTimeFormat(locale, { month: 'long', year: 'numeric' });
 
-  // Tłumaczy tekst z zachowaniem spacji na początku i końcu; brak wpisu → tekst bez zmian
   function translate(text) {
     const [, before, core, after] = text.match(/^(\s*)([\s\S]*?)(\s*)$/);
     const key = core.replace(/\s+/g, ' ');
@@ -52,21 +37,18 @@
     if (date) out = longDateFormat.format(new Date(Number(date[3]), MONTHS_PL.indexOf(date[2]), Number(date[1])));
     const month = out === undefined && key.match(MONTH_PL);
     if (month) out = monthYearFormat.format(new Date(Number(month[2]), MONTHS_NOM_PL.indexOf(month[1]), 1));
-    return out === undefined || typeof out !== 'string' ? text : before + out + after;
+    return typeof out !== 'string' ? text : before + out + after;
   }
 
-  // t('Dodano: {room}', { room }) — tekst z JS z miejscami na wartości
   function t(text, vars = {}) {
     return translate(text).replace(/\{(\w+)\}/g, (match, name) => (name in vars ? vars[name] : match));
   }
 
-  // tw(3, ['noc', 'noce', 'nocy']) → samo słowo: „noce” / „nights” / „noches”
   function tw(n, forms) {
     const entry = lookup(forms.join('|'));
     return entry ? entry[n === 1 ? 0 : 1] : plural(n, forms);
   }
 
-  // tn(3, ['noc', 'noce', 'nocy']) → „3 noce” / „3 nights” / „3 noches”
   const tn = (n, forms) => `${n} ${tw(n, forms)}`;
 
   function translatePage() {
@@ -91,9 +73,6 @@
 
   translatePage();
 
-  /* ---------- Pomocnicze: polska odmiana i daty ---------- */
-
-  // plural(5, ['noc', 'noce', 'nocy']) -> "nocy"
   function plural(n, [one, few, many]) {
     if (n === 1) return one;
     const lastDigit = n % 10;
@@ -102,7 +81,6 @@
     return many;
   }
 
-  // Data w formacie RRRR-MM-DD w lokalnej strefie czasowej (bez przesunięć UTC)
   function toISO(date) {
     const y = date.getFullYear();
     const m = String(date.getMonth() + 1).padStart(2, '0');
@@ -128,9 +106,6 @@
   const dateFormat = new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short' });
   const formatRange = (start, end) => `${dateFormat.format(fromISO(start))} – ${dateFormat.format(fromISO(end))}`;
 
-  /* ---------- Pomocnicze: przewijanie i dropdowny ---------- */
-
-  // Wywołuje fn przy przewijaniu, najwyżej raz na klatkę animacji
   function onScrollFrame(fn) {
     let ticking = false;
     window.addEventListener('scroll', () => {
@@ -143,15 +118,12 @@
     }, { passive: true });
   }
 
-  // Zamyka dropdown (kalendarz, goście) i oddaje fokus przyciskowi, który go otworzył
   function closeDropdown(toggle) {
     bootstrap.Dropdown.getOrCreateInstance(toggle).hide();
     toggle.focus();
   }
 
-  /* ---------- Powiadomienia (Bootstrap Toast) ---------- */
-  const toastEl = qs('#appToast');
-  const toast = bootstrap.Toast.getOrCreateInstance(toastEl, { delay: 7000 });
+  const toast = bootstrap.Toast.getOrCreateInstance(qs('#appToast'), { delay: 7000 });
 
   function notify(title, text) {
     qs('#appToastTitle').textContent = title;
@@ -159,12 +131,10 @@
     toast.show();
   }
 
-  /* ---------- Nagłówek i menu ---------- */
   const header = qs('.site-header');
   const menuEl = qs('#siteMenu');
   const menu = bootstrap.Offcanvas.getOrCreateInstance(menuEl);
 
-  // Na telefonie najpierw zamyka menu, a dopiero potem wykonuje akcję (przewinięcie, fokus)
   function afterMenuClosed(action) {
     if (!menuEl.classList.contains('show')) {
       action();
@@ -183,7 +153,6 @@
     const progress = qs('.scroll-progress');
     let lastY = window.scrollY;
 
-    // Nagłówek: tło po zjechaniu z hero, chowanie przy przewijaniu w dół, pasek postępu
     function update() {
       const y = window.scrollY;
       const max = document.documentElement.scrollHeight - window.innerHeight;
@@ -198,10 +167,8 @@
     update();
     onScrollFrame(update);
 
-    // Fokus klawiatury w nagłówku zawsze go pokazuje
     header.addEventListener('focusin', () => header.classList.remove('is-hidden'));
 
-    // Logo i „Do góry”: na stronie głównej płynnie przewijamy na samą górę
     qsa('[data-action="scroll-top"]').forEach((link) => {
       link.addEventListener('click', (event) => {
         event.preventDefault();
@@ -209,9 +176,6 @@
       });
     });
 
-    // Link w otwartym menu mobilnym: przewijamy dopiero po zamknięciu panelu
-    // (na desktopie menu nie jest panelem — działa zwykły link #sekcja).
-    // Linki do innej podstrony (np. blog.html, index.html#hotel) działają zwyczajnie.
     qsa('.site-menu__link', menuEl).forEach((link) => {
       link.addEventListener('click', (event) => {
         const target = link.pathname === window.location.pathname && link.hash ? qs(link.hash) : null;
@@ -225,7 +189,6 @@
     });
   }
 
-  /* ---------- Wybór języka ---------- */
   function initLanguage() {
     const code = lang.toUpperCase();
     const toggle = qs('.lang-switch__toggle');
@@ -253,7 +216,6 @@
     });
   }
 
-  /* ---------- Film w tle hero ---------- */
   function initHeroVideo() {
     const hero = qs('.hero');
     const video = qs('#heroVideo');
@@ -261,13 +223,11 @@
     const portrait = window.matchMedia('(max-aspect-ratio: 4/5)');
     const saveData = navigator.connection && navigator.connection.saveData;
 
-    // Film startuje od razu (decyzja projektowa, także przy ograniczeniu ruchu) — przycisk pozwala go zatrzymać.
-    // Wyjątek: tryb oszczędzania danych — wtedy zostaje zdjęcie, a film można włączyć przyciskiem.
     let pausedByUser = Boolean(saveData);
 
     const play = () => {
       const attempt = video.play();
-      if (attempt) attempt.catch(() => { /* autoodtwarzanie zablokowane — zostaje zdjęcie */ });
+      if (attempt) attempt.catch(() => {});
     };
 
     function load() {
@@ -295,7 +255,6 @@
       toggle.setAttribute('aria-pressed', String(pausedByUser));
     });
 
-    // Film nie gra, gdy hero jest poza ekranem (oszczędza baterię i procesor)
     new IntersectionObserver(([entry]) => {
       if (!video.getAttribute('src')) return;
       if (entry.isIntersecting && !pausedByUser) play();
@@ -306,19 +265,11 @@
       if (video.getAttribute('src')) load();
     });
     if (pausedByUser) return;
-    // Film ładujemy dopiero po załadowaniu strony, żeby nie spowalniał pierwszego wyświetlenia
     if (document.readyState === 'complete') load();
     else window.addEventListener('load', load, { once: true });
   }
 
-  /* ---------- Lokalizacje: Barcelona, Malaga, Madryt (tylko strona główna) ---------- */
-  // Teksty zależne od miasta. Elementy w index.html mają atrybut data-city="klucz".
-  // HTML zawiera wersję barcelońską (miasto domyślne, widoczne także bez JavaScriptu),
-  // dlatego przy zmianie tekstów Barcelony trzeba poprawić oba miejsca.
-  // [tekst, wyróżnienie] — tytuł z kursywą <em> na końcu; principles — pary [nazwa, opis];
-  // { src, alt } — zdjęcie; experiences — karty Poranek / Popołudnie / Wieczór (zdjęcia z Pexels).
   const DEFAULT_CITY = 'barcelona';
-  // ES_BASE (adres strony, np. /strona-astro-e-spania/) ustawia Layout.astro
   const IMG = `${window.ES_BASE || ''}assets/images/cities/`;
   const CTA_BAY = { src: `${window.ES_BASE || ''}assets/images/cta-bay.webp`, alt: 'Zatoka z łodziami żaglowymi o zachodzie słońca' };
   const CITIES = {
@@ -400,8 +351,6 @@
     return CITIES[checked && isCity(checked.value) ? checked.value : DEFAULT_CITY];
   }
 
-  // Teksty budowane z nazwy miasta — wspólny wzór dla wszystkich lokalizacji.
-  // {loc} — polska forma „w Barcelonie”, {city} — nazwa miasta w wybranym języku.
   function cityTexts(city) {
     const vars = { loc: city.locative, city: t(city.name) };
     return {
@@ -419,7 +368,6 @@
     img.alt = t(alt);
   }
 
-  // Teksty z CITIES są po polsku — każdy przechodzi przez t()
   function fillCityText(el, value) {
     const key = el.dataset.city;
     if (typeof value === 'string') {
@@ -449,18 +397,15 @@
     qsa('[data-city]').forEach((el) => fillCityText(el, texts[el.dataset.city]));
   }
 
-  // Zmiana miasta przez użytkownika: widoczne teksty gasną, zmieniają się i wracają.
-  // Szybkie kolejne kliknięcie przerywa poprzednie przejście — wygrywa ostatni wybór.
   let cityFades = [];
 
   function changeCity(id) {
     const city = CITIES[id];
     qs('#cityAnnounce').textContent = t('Wyświetlasz hotel e-spania {loc}.', { loc: city.locative, city: t(city.name) });
-    // Zdjęcia nowego miasta zaczynają się wczytywać już w trakcie wygaszania
     [...city.experiences, city.ctaImage].forEach(({ src }) => { new Image().src = src; });
     try {
       localStorage.setItem('es-city', id);
-    } catch (e) { /* bez localStorage wybór obowiązuje do odświeżenia strony */ }
+    } catch (e) {}
 
     const swap = () => {
       fillCity(id);
@@ -484,15 +429,14 @@
       swap();
       cityFades = visible.map((el) => el.animate({ opacity: [0, 1] }, { duration: 420, easing: 'ease-out' }));
       fadeOut.forEach((animation) => animation.cancel());
-    }, () => { /* przerwane kolejnym wyborem — teksty ustawi nowsze wywołanie */ });
+    }, () => {});
   }
 
-  // Miasto zapamiętane przy ostatnim wyborze na stronie głównej (nieznane lub brak → Barcelona)
   function savedCity() {
     let saved = null;
     try {
       saved = localStorage.getItem('es-city');
-    } catch (e) { /* brak dostępu do localStorage — zostaje Barcelona */ }
+    } catch (e) {}
     return isCity(saved) ? saved : DEFAULT_CITY;
   }
 
@@ -504,14 +448,12 @@
 
     qsa('input[name="city"]').forEach((input) => {
       input.addEventListener('change', () => {
-        // Nowy tytuł hero wjeżdża słowo po słowie od razu, bez czekania na kurtynę
         qs('.hero__title').style.setProperty('--intro-delay', '0s');
         changeCity(input.value);
       });
     });
   }
 
-  /* ---------- Formularz dostępności (tylko strona główna) ---------- */
   const form = qs('#rezerwacja');
   const arrival = qs('#arrival');
   const departure = qs('#departure');
@@ -524,7 +466,7 @@
   const defaultStatus = status ? status.textContent : '';
   const MAX_NIGHTS = 30;
 
-  const rooms = new Map(); // id -> dane pokoju (wypełniane w initRoomPanel)
+  const rooms = new Map();
 
   const guestsTotal = () => Number(adults.value) + Number(children.value);
 
@@ -561,7 +503,6 @@
     return true;
   }
 
-  // Krótki opis wybranego pobytu, np. "Barcelona · 12 lis – 15 lis · 3 noce · 2 gości"
   function stayDescription() {
     const parts = [t(currentCity().name)];
     if (hasValidDates()) {
@@ -579,7 +520,6 @@
   function updateGuests() {
     const a = Number(adults.value);
     const c = Number(children.value);
-    // Krótki opis mieści się w polu także na telefonie; szczegóły są w rozwijanym okienku
     const total = a + c;
     qs('#guestsSummary').textContent = c > 0
       ? tn(total, ['gość', 'gości', 'gości'])
@@ -609,7 +549,6 @@
     validateRoom();
   }
 
-  // Przekazuje wybrany pobyt do pełnego formularza rezerwacji
   function goToReservation(roomId) {
     const params = new URLSearchParams({
       miasto: qs('input[name="city"]:checked').value,
@@ -627,19 +566,17 @@
     datesToggle.focus({ preventScroll: true });
   }
 
-  /* ---------- Kalendarz zakresu dat (okienko nad paskiem) ---------- */
   const calendar = {
     el: qs('#calendar'),
     months: qs('#calendarMonths'),
     hint: qs('#calendarHint'),
-    view: null,     // pierwszy dzień pierwszego wyświetlanego miesiąca
-    focus: null,    // data (ISO) przycisku, który ma fokus klawiatury
-    hover: null,    // data pod kursorem — podgląd zakresu przed wybraniem wyjazdu
+    view: null,
+    focus: null,
+    hover: null,
   };
   const twoMonths = window.matchMedia('(min-width: 768px)');
   const monthTitle = new Intl.DateTimeFormat(locale, { month: 'long', year: 'numeric' });
   const dayLabel = new Intl.DateTimeFormat(locale, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-  // Dni tygodnia od poniedziałku: po polsku ręcznie (Pn, Wt…), w EN/ES z Intl (1.01.2024 to poniedziałek)
   const WEEKDAYS = lang === 'pl'
     ? [['Pn', 'poniedziałek'], ['Wt', 'wtorek'], ['Śr', 'środa'], ['Cz', 'czwartek'], ['Pt', 'piątek'], ['So', 'sobota'], ['Nd', 'niedziela']]
     : Array.from({ length: 7 }, (_, i) => ['short', 'long'].map((weekday) => new Intl.DateTimeFormat(locale, { weekday }).format(new Date(2024, 0, 1 + i))));
@@ -650,7 +587,7 @@
   function renderMonth(start) {
     const today = toISO(new Date());
     const last = lastBookable();
-    const offset = (start.getDay() + 6) % 7; // tydzień zaczyna się w poniedziałek
+    const offset = (start.getDay() + 6) % 7;
     const daysInMonth = new Date(start.getFullYear(), start.getMonth() + 1, 0).getDate();
     const end = departure.value || (arrival.value && calendar.hover > arrival.value ? calendar.hover : '');
 
@@ -703,7 +640,6 @@
       : arrival.value ? `${dateFormat.format(fromISO(arrival.value))} – …` : t('Przyjazd / Wyjazd');
   }
 
-  // Przesuwa widok tak, by wskazana data była widoczna, i ustawia na niej fokus
   function focusDay(iso) {
     const today = toISO(new Date());
     const clamped = iso < today ? today : iso > lastBookable() ? lastBookable() : iso;
@@ -736,10 +672,8 @@
     updateStatus();
     if (departure.value) {
       validateDates();
-      // Po wybraniu wyjazdu okienko zamyka się samo — jak w kalendarzach rezerwacyjnych
       window.setTimeout(() => closeDropdown(datesToggle), reduceMotion.matches ? 0 : 350);
     } else {
-      // Jeśli wcześniej był błąd, podpowiadamy kolejny krok zamiast starego komunikatu
       if (datesToggle.closest('.booking__field').classList.contains('is-invalid')) validateDates();
       const button = qs(`[data-date="${iso}"]`, calendar.months);
       if (button) button.focus();
@@ -756,7 +690,6 @@
       if (button && !button.disabled) pickDate(button.dataset.date);
     });
 
-    // Podgląd zakresu pod kursorem
     calendar.months.addEventListener('mouseover', (event) => {
       const button = event.target.closest('.calendar__day');
       if (!button || !arrival.value || departure.value || button.dataset.date === calendar.hover) return;
@@ -767,9 +700,6 @@
       });
     });
 
-    // Klawiatura: strzałki ±1 dzień / ±1 tydzień, PageUp/PageDown ±1 miesiąc.
-    // Nasłuch na window w fazie przechwytywania — Bootstrap przejmuje strzałki
-    // w dropdownach na poziomie document, więc musimy zareagować przed nim.
     window.addEventListener('keydown', (event) => {
       const button = event.target.closest && event.target.closest('#calendarMonths .calendar__day');
       if (!button) return;
@@ -811,7 +741,6 @@
       if (arrival.value) validateDates();
     });
 
-    // Po otwarciu fokus trafia na wybraną datę (albo dzisiejszą)
     datesToggle.addEventListener('shown.bs.dropdown', () => {
       focusDay(arrival.value && !departure.value ? arrival.value : arrival.value || toISO(new Date()));
       header.classList.remove('is-hidden');
@@ -853,7 +782,6 @@
 
       const room = rooms.get(roomInput.value);
       if (!room) {
-        // Bez wybranego pokoju pokazujemy panel z pokojami pasującymi do liczby gości
         openRoomPanel({ fromSearch: true });
         return;
       }
@@ -869,14 +797,11 @@
 
     updateGuests();
 
-    // Przycisk „Rezerwuj” z podstron prowadzi do index.html#rezerwacja.
-    // Po wczytaniu przeglądarka sama przewija do kotwicy (i zdejmuje fokus), więc czekamy na „load”.
     if (window.location.hash === '#rezerwacja') {
       window.addEventListener('load', () => window.setTimeout(focusBooking, 0), { once: true });
     }
   }
 
-  /* ---------- Panel wyboru pokoi (Bootstrap Offcanvas, tylko strona główna) ---------- */
   const panelEl = qs('#roomPanel');
   const panel = panelEl ? bootstrap.Offcanvas.getOrCreateInstance(panelEl) : null;
   const list = qs('#roomList');
@@ -970,7 +895,6 @@
   }
 
   function initRoomPanel() {
-    // Dane pokoi pochodzą z sekcji #pokoje — treść jest w HTML tylko raz
     qsa('.room-card').forEach((card) => {
       const img = qs('img', card);
       rooms.set(card.dataset.roomId, {
@@ -985,12 +909,10 @@
     });
     rooms.forEach((room) => list.append(buildRoomOption(room)));
 
-    // Przyciski „Wybierz” w sekcji pokoi otwierają panel z podglądem danego pokoju
     qsa('[data-open-room]').forEach((btn) => {
       btn.addEventListener('click', () => openRoomPanel({ focusId: btn.dataset.openRoom }));
     });
 
-    // Przycisk w formularzu otwiera panel przez data-bs-toggle — zapamiętujemy, gdzie wrócić
     roomTrigger.addEventListener('click', () => {
       panelContext = { fromSearch: false, focusId: null, returnFocus: roomTrigger };
     });
@@ -1018,7 +940,6 @@
     });
   }
 
-  /* ---------- Galeria z podglądem (Bootstrap Modal) ---------- */
   function initGallery() {
     const buttons = qsa('.gallery__button');
     const modalEl = qs('#galleryModal');
@@ -1056,44 +977,10 @@
       if (event.key === 'ArrowRight') step(1);
     });
 
-    // Po zamknięciu wracamy fokusem do miniatury, którą oglądano jako ostatnią
     modalEl.addEventListener('hidden.bs.modal', () => buttons[index].focus());
   }
 
-  /* ---------- Blog (blog.html, single.html) — elementy demonstracyjne ---------- */
-
-  // Autorzy wpisów. Karty linkują do wspólnego szablonu single.html z parametrem ?autor=klucz;
-  // HTML zawiera wersję Oskara (działa bez JS), pozostałych podmieniamy po wczytaniu.
-  const AUTHORS = {
-    oskar: {
-      name: 'Oskar Kasprzyk',
-      initials: 'OK',
-      bio: 'Współtwórca serwisu e-spania. Na blogu zbiera praktyczne wskazówki dla osób, które planują pierwszy lub kolejny wyjazd do Hiszpanii — od wyboru terminu po plan zwiedzania.'
-    },
-    krystian: {
-      name: 'Krystian Jałocha',
-      initials: 'KJ',
-      bio: 'Współtwórca serwisu e-spania. Pisze o hiszpańskiej kuchni, winach i zwyczajach — o tym, co zamówić, kiedy usiąść do kolacji i jak poczuć rytm dnia jak miejscowi.'
-    },
-    dawid: {
-      name: 'Dawid Jajko',
-      initials: 'DJ',
-      bio: 'Współtwórca serwisu e-spania. Układa trasy zwiedzania i podpowiada, jak sprawnie poruszać się po Hiszpanii — od miast Andaluzji po górskie miasteczka Majorki.'
-    }
-  };
-
-  function initPostAuthor() {
-    const fields = qsa('[data-post-author]');
-    if (!fields.length) return;
-    const author = AUTHORS[new URLSearchParams(window.location.search).get('autor')];
-    if (!author) return;                  // brak lub nieznany parametr → zostaje autor z HTML
-    fields.forEach((el) => { el.textContent = t(author[el.dataset.postAuthor]); });
-  }
-
   function initBlog() {
-    initPostAuthor();
-
-    // Wyszukiwarka i formularz komentarza: walidacja Bootstrapa, potem komunikat demo (nic nie jest wysyłane)
     qsa('[data-demo-form]').forEach((demoForm) => {
       demoForm.addEventListener('submit', (event) => {
         event.preventDefault();
@@ -1108,7 +995,6 @@
       });
     });
 
-    // Udostępnianie: adres i tytuł bieżącej strony wstawiamy do linków serwisów
     const url = encodeURIComponent(window.location.href);
     const title = encodeURIComponent(document.title);
     qsa('[data-share]').forEach((link) => {
@@ -1119,7 +1005,6 @@
       button.addEventListener('click', () => {
         const copied = () => notify(t('Skopiowano link'), t('Adres artykułu jest w schowku — możesz go wkleić w wiadomości.'));
         const failed = () => notify(t('Nie udało się skopiować'), t('Skopiuj adres z paska przeglądarki.'));
-        // Bez Clipboard API (np. strona otwarta przez http w starszej przeglądarce) prosimy o ręczne skopiowanie
         if (!navigator.clipboard) {
           failed();
           return;
@@ -1129,9 +1014,6 @@
     });
   }
 
-  /* ---------- Animacje ---------- */
-
-  // Dzieli tytuł na słowa (maska + przesunięcie). Kursywa <em> zostaje zachowana.
   function splitTitle(title) {
     let index = 0;
     const wrapText = (node) => {
@@ -1161,16 +1043,13 @@
     walk(title);
   }
 
-  // Łagodne pojawianie się elementów przy przewijaniu
   function initReveal() {
     const elements = qsa('[data-reveal]');
-    // Przy ograniczonym ruchu CSS zamienia animację na samo rozjaśnienie, więc obserwator nadal działa
     if (!('IntersectionObserver' in window)) {
       elements.forEach((el) => el.classList.add('is-visible'));
       return;
     }
 
-    // Elementy w tym samym kontenerze pojawiają się kolejno, z niewielkim opóźnieniem
     const groups = new Map();
     elements.forEach((el) => {
       const group = el.closest('.row, .container, ul') || el.parentElement;
@@ -1179,9 +1058,7 @@
       groups.set(group, position + 1);
     });
 
-    // Element ukryty przez clip-path jest dla obserwatora „niewidoczny”,
-    // dlatego przy odsłanianiu kurtyną obserwujemy jego rodzica.
-    const targets = new Map(); // obserwowany element -> elementy do pokazania
+    const targets = new Map();
     elements.forEach((el) => {
       const target = el.dataset.reveal === 'clip' ? el.parentElement : el;
       if (!targets.has(target)) targets.set(target, []);
@@ -1198,8 +1075,6 @@
 
     targets.forEach((_, target) => observer.observe(target));
 
-    // Przeglądarka nie ładuje leniwych zdjęć schowanych pod clip-path,
-    // więc dociągamy je wcześniej — ok. 800 px przed dojściem do sekcji
     const preloader = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (!entry.isIntersecting) return;
@@ -1210,7 +1085,6 @@
     qsa('[data-reveal="clip"]').forEach((el) => preloader.observe(el.parentElement));
   }
 
-  // Delikatny parallax: element przesuwa się wolniej lub szybciej niż strona
   function initParallax() {
     if (reduceMotion.matches) return;
     const items = qsa('[data-parallax]').map((el) => ({ el, speed: Number(el.dataset.parallax) }));
@@ -1220,8 +1094,7 @@
       const viewport = window.innerHeight;
       items.forEach(({ el, speed }) => {
         const parent = el.parentElement.getBoundingClientRect();
-        if (parent.bottom < -viewport * 0.2 || parent.top > viewport * 1.2) return; // poza ekranem
-        // Przesunięcie rośnie z odległością od środka ekranu, ale nigdy nie przekracza 8% wysokości
+        if (parent.bottom < -viewport * 0.2 || parent.top > viewport * 1.2) return;
         const limit = parent.height * 0.08;
         const offset = Math.max(-limit, Math.min(limit, (parent.top + parent.height / 2 - viewport / 2) * speed));
         el.style.setProperty('--parallax', `${offset.toFixed(1)}px`);
@@ -1232,17 +1105,13 @@
     onScrollFrame(update);
   }
 
-  // Wspólne narzędzia dla shop.js
-  window.ES = { qs, qsa, plural, toISO, fromISO, addDays, nightsBetween, notify, t, tn, tw, lang, locale };
+  window.ES = { qs, qsa, toISO, fromISO, addDays, nightsBetween, notify, t, tn, tw, lang, locale };
 
-  // Miasto ustawiamy przed podziałem tytułów na słowa — dzielony jest już właściwy tekst
-  // Na podstronach jedynym elementem zależnym od miasta jest adres w stopce
   if (form) initCity();
   else if (savedCity() !== DEFAULT_CITY) fillCity(savedCity());
   qsa('[data-split]').forEach(splitTitle);
   initHeader();
   initLanguage();
-  // Hero, rezerwacja, panel pokoi i galeria istnieją tylko na stronie głównej
   if (form) {
     initHeroVideo();
     initRoomPanel();

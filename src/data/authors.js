@@ -1,4 +1,3 @@
-// Autorzy wpisów na blogu. W pliku .md wpisu podajesz klucz: author: oskar / krystian / dawid
 export const authors = {
   oskar: {
     name: 'Oskar Kasprzyk',

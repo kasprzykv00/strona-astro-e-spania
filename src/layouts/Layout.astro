@@ -1,15 +1,4 @@
 ---
-// Wspólny szkielet każdej strony: <head>, ikony, Header, treść strony, Footer, skrypty.
-//
-// Użycie na stronie:
-//   <Layout title="Tytuł | e-spania" page="sklep">
-//     <Fragment slot="head"> ...metadane tylko tej strony... </Fragment>
-//     ...treść strony...
-//     <Fragment slot="po-stopce"> ...okienka/panele tej strony... </Fragment>
-//   </Layout>
-//
-//   title — tytuł w karcie przeglądarki
-//   page  — nazwa strony dla skryptów (body data-page): start, sklep, produkt, koszyk...
 import { getCollection } from 'astro:content';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
@@ -19,8 +8,6 @@ import { url } from '../utils/url.js';
 const { title = 'e-spania', page, productId } = Astro.props;
 const home = page === 'start';
 
-// Produkty z plików .md przekazujemy skryptom sklepu (koszyk, filtry, karta produktu).
-// Dzięki temu dane produktów są tylko w jednym miejscu: src/content/products/*.md
 const products = (await getCollection('products'))
   .sort((a, b) => a.data.order - b.data.order)
   .map(({ id, data, body }) => ({
@@ -48,10 +35,8 @@ const products = (await getCollection('products'))
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.2/font/bootstrap-icons.min.css" integrity="sha384-nWN3KqaaVcbEsCjLSV+2jMjh62Iny/+mN3srM8TZeM8N6aj7eDl5wwYggjAJ4/sJ" crossorigin="anonymous">
   <link rel="stylesheet" href={url('css/styles.css')}>
 
-  <!-- Metadane konkretnej strony (opis, Open Graph, dane strukturalne) -->
   <slot name="head" />
 
-  <!-- Adres strony i produkty dla skryptów w public/js -->
   <script is:inline define:vars={{ base: url(), products }}>
     window.ES_BASE = base;
     window.ES_PRODUCTS = products;
@@ -59,9 +44,7 @@ const products = (await getCollection('products'))
 
   {home ? (
     <script is:inline>
-      // Klasa "js" włącza animacje tylko wtedy, gdy JavaScript działa (bez JS treść jest od razu widoczna).
       document.documentElement.classList.add('js');
-      // Wybrany język EN/ES: strona czeka ukryta, aż main.js podmieni teksty (najwyżej 3 s)
       try {
         const lang = localStorage.getItem('es-lang');
         if (lang === 'en' || lang === 'es') {
@@ -69,23 +52,19 @@ const products = (await getCollection('products'))
           document.documentElement.classList.add('i18n-pending');
           setTimeout(() => document.documentElement.classList.remove('i18n-pending'), 3000);
         }
-      } catch (e) { /* bez localStorage strona zostaje po polsku */ }
+      } catch (e) {}
       try {
         if (sessionStorage.getItem('es-intro')) document.documentElement.classList.add('no-intro');
         sessionStorage.setItem('es-intro', '1');
-      } catch (e) { /* bez sessionStorage kurtyna pokaże się za każdym razem */ }
-      // Zapamiętane miasto inne niż domyślna Barcelona: teksty zależne od miasta czekają
-      // ukryte, aż main.js je podmieni (bez mignięcia treści barcelońskiej)
+      } catch (e) {}
       try {
         const city = localStorage.getItem('es-city');
         if (city && city !== 'barcelona') document.documentElement.classList.add('city-pending');
-      } catch (e) { /* bez localStorage zawsze startuje Barcelona */ }
+      } catch (e) {}
     </script>
   ) : (
     <script is:inline>
-      // Klasa "js" włącza animacje tylko wtedy, gdy JavaScript działa. Kurtyna intro jest tylko na stronie głównej.
       document.documentElement.classList.add('js', 'no-intro');
-      // Wybrany język EN/ES: strona czeka ukryta, aż main.js podmieni teksty (najwyżej 3 s)
       try {
         const lang = localStorage.getItem('es-lang');
         if (lang === 'en' || lang === 'es') {
@@ -93,14 +72,13 @@ const products = (await getCollection('products'))
           document.documentElement.classList.add('i18n-pending');
           setTimeout(() => document.documentElement.classList.remove('i18n-pending'), 3000);
         }
-      } catch (e) { /* bez localStorage strona zostaje po polsku */ }
+      } catch (e) {}
     </script>
   )}
 </head>
 <body data-page={page} data-product-id={productId}>
   <a class="skip-link" href="#main">Przejdź do treści</a>
 
-  <!-- Kurtyna przy pierwszym wejściu na stronę główną (animacja w CSS, raz na sesję) -->
   {home && (
     <div class="intro" aria-hidden="true">
       <img class="intro__logo" src={url('assets/logo/logo-light.png')} alt="e-spania" width="479" height="270">
@@ -115,7 +93,6 @@ const products = (await getCollection('products'))
 
   <Footer />
 
-  <!-- Panele i okienka konkretnej strony (np. galeria, powiadomienia) -->
   <slot name="po-stopce" />
 
   <script is:inline src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous" defer></script>

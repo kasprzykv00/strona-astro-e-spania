@@ -1,31 +1,22 @@
-/* =========================================================
-   e-spania — dane sklepu i rezerwacji (fikcyjny hotel, projekt RWD)
-   Tutaj zmieniasz ceny, opisy produktów, dodatki i wycieczki.
-   Produkty są w plikach src/content/products/*.md (projekt Astro).
-   ========================================================= */
 window.ES_DATA = (() => {
-  // Produkty pochodzą z plików src/content/products/*.md — Layout.astro przekazuje je jako window.ES_PRODUCTS.
-  // Ceny, warianty i opisy produktów zmieniasz więc w plikach .md, nie tutaj.
   const products = window.ES_PRODUCTS || [];
   const base = window.ES_BASE || '';
 
   const rooms = [
-    { id: 'classic', name: 'Pokój Classic', capacity: 2, price: 420, area: 'ok. 22 m²', bed: 'łóżko podwójne', image: `${base}assets/images/room-classic.webp`, alt: 'Jasny pokój z podwójnym łóżkiem i białą pościelą', text: 'Jasne wnętrze z naturalnymi tkaninami i rękodziełem.' },
-    { id: 'deluxe', name: 'Pokój Deluxe', capacity: 2, price: 560, area: 'ok. 30 m²', bed: 'łóżko king-size', image: `${base}assets/images/room-deluxe.webp`, alt: 'Przestronny pokój z lnianą pościelą i rzeźbionym panelem nad łóżkiem', text: 'Więcej przestrzeni, rzeźbione detale i len w odcieniach piasku.' },
-    { id: 'junior', name: 'Junior Suite', capacity: 3, price: 720, area: 'ok. 38 m²', bed: 'king-size + sofa', image: `${base}assets/images/room-junior.webp`, alt: 'Sypialnia z łukowymi oknami wychodzącymi na zieleń', text: 'Łukowe okna, grube ściany i strefa wypoczynku.' },
-    { id: 'suite', name: 'Suite z balkonem', capacity: 4, price: 980, area: 'ok. 48 m²', bed: 'balkon', image: `${base}assets/images/room-suite.webp`, alt: 'Otwarte drzwi balkonowe z widokiem na morze o zmierzchu', text: 'Prywatny balkon i najwięcej przestrzeni.' },
+    { id: 'classic', name: 'Pokój Classic', capacity: 2, price: 420, image: `${base}assets/images/room-classic.webp`, alt: 'Jasny pokój z podwójnym łóżkiem i białą pościelą' },
+    { id: 'deluxe', name: 'Pokój Deluxe', capacity: 2, price: 560, image: `${base}assets/images/room-deluxe.webp`, alt: 'Przestronny pokój z lnianą pościelą i rzeźbionym panelem nad łóżkiem' },
+    { id: 'junior', name: 'Junior Suite', capacity: 3, price: 720, image: `${base}assets/images/room-junior.webp`, alt: 'Sypialnia z łukowymi oknami wychodzącymi na zieleń' },
+    { id: 'suite', name: 'Suite z balkonem', capacity: 4, price: 980, image: `${base}assets/images/room-suite.webp`, alt: 'Otwarte drzwi balkonowe z widokiem na morze o zmierzchu' },
   ];
 
-  // unit: person-night = za osobę za noc, night = za noc, stay = jednorazowo
   const extras = [
-    { id: 'breakfast', name: 'Śniadanie w patio', text: 'Świeże pieczywo, owoce, oliwa i kawa podawane do 11:00.', price: 59, unit: 'person-night', unitLabel: 'os. / noc', icon: 'bi-cup-hot' },
-    { id: 'transfer', name: 'Transfer z lotniska', text: 'Kierowca czeka w hali przylotów z tabliczką.', price: 180, unit: 'stay', unitLabel: 'za przejazd', icon: 'bi-car-front' },
-    { id: 'late', name: 'Późne wymeldowanie', text: 'Pokój zostaje Twój do 16:00 w dniu wyjazdu.', price: 90, unit: 'stay', unitLabel: 'jednorazowo', icon: 'bi-clock' },
-    { id: 'parking', name: 'Miejsce parkingowe', text: 'Strzeżony parking w garażu hotelu.', price: 70, unit: 'night', unitLabel: 'za noc', icon: 'bi-p-square' },
-    { id: 'cava', name: 'Cava i owoce w pokoju', text: 'Czekają schłodzone na Twój przyjazd.', price: 120, unit: 'stay', unitLabel: 'jednorazowo', icon: 'bi-gift' },
+    { id: 'breakfast', name: 'Śniadanie w patio', price: 59, unit: 'person-night' },
+    { id: 'transfer', name: 'Transfer z lotniska', price: 180, unit: 'stay' },
+    { id: 'late', name: 'Późne wymeldowanie', price: 90, unit: 'stay' },
+    { id: 'parking', name: 'Miejsce parkingowe', price: 70, unit: 'night' },
+    { id: 'cava', name: 'Cava i owoce w pokoju', price: 120, unit: 'stay' },
   ];
 
-  // Wycieczki zależą od miasta — mają termin, dlatego wybiera się je przy rezerwacji, a nie w sklepie
   const excursions = {
     barcelona: [
       { id: 'bcn-gaudi', name: 'Sagrada Família i Park Güell', text: 'Pół dnia z przewodnikiem, bilety bez kolejki.', price: 249, duration: '5 godzin' },
@@ -45,9 +36,9 @@ window.ES_DATA = (() => {
   };
 
   const cities = {
-    barcelona: { name: 'Barcelona', hotel: 'e-spania Barcelona', locative: 'w Barcelonie' },
-    malaga: { name: 'Malaga', hotel: 'e-spania Malaga', locative: 'w Maladze' },
-    madryt: { name: 'Madryt', hotel: 'e-spania Madryt', locative: 'w Madrycie' },
+    barcelona: { hotel: 'e-spania Barcelona', locative: 'w Barcelonie' },
+    malaga: { hotel: 'e-spania Malaga', locative: 'w Maladze' },
+    madryt: { hotel: 'e-spania Madryt', locative: 'w Madrycie' },
   };
 
   const delivery = {

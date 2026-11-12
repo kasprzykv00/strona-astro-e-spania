@@ -1,12 +1,12 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Toast from '../components/Toast.astro';
 import { url } from '../utils/url.js';
 ---
 <Layout title="Moje konto — rezerwacje i zamówienia | e-spania" page="konto">
   <Fragment slot="head">
     <meta name="description" content="Twoje konto e-spania: rezerwacje z kalendarzem i odliczaniem do przyjazdu, historia zamówień, adres dostawy i ustawienia.">
 
-    <!-- Open Graph: pełne adresy strony na GitHub Pages (https://kasprzykv00.github.io/strona-astro-e-spania/). -->
     <meta property="og:type" content="website">
     <meta property="og:locale" content="pl_PL">
     <meta property="og:site_name" content="e-spania">
@@ -206,18 +206,5 @@ import { url } from '../utils/url.js';
     </div>
   </div>
 
-  <Fragment slot="po-stopce">
-    <!-- ===================== POWIADOMIENIA (toast) ===================== -->
-    <div class="toast-container position-fixed p-3 es-toast-container">
-      <div class="toast es-toast" id="appToast" role="status" aria-live="polite" aria-atomic="true">
-        <div class="es-toast__body">
-          <p class="es-toast__title" id="appToastTitle"></p>
-          <p class="es-toast__text" id="appToastText"></p>
-        </div>
-        <button type="button" class="icon-btn es-toast__close" data-bs-dismiss="toast" aria-label="Zamknij powiadomienie"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-close"/></svg></button>
-      </div>
-    </div>
-
-
-  </Fragment>
+  <Toast slot="po-stopce" />
 </Layout>

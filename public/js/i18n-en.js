@@ -1,16 +1,7 @@
-/* =========================================================
-   e-spania — słownik: angielski (EN)
-   Format: "tekst po polsku": "tłumaczenie". Klucz musi być dokładnie taki jak w HTML/JS
-   (spacje na początku i końcu nie mają znaczenia). Tekst bez wpisu zostaje po polsku.
-   {nazwa} — miejsce na wartość wstawianą przez JS. Tablica — liczba pojedyncza i mnoga.
-   Etap 1: nagłówek, stopka, komunikaty i strona główna. Etap 2: sklep, rezerwacja, płatność i konto. Etap 3: blog.
-   ========================================================= */
 window.ES_I18N = window.ES_I18N || {};
 window.ES_I18N.en = {
-  /* ---------- Tytuł strony ---------- */
   "e-spania — hotele w Barcelonie, Maladze i Madrycie | Rezerwacja": "e-spania — hotels in Barcelona, Malaga and Madrid | Booking",
 
-  /* ---------- Nagłówek i menu (wszystkie strony) ---------- */
   "Przejdź do treści": "Skip to content",
   "Nawigacja główna": "Main navigation",
   "e-spania — strona główna": "e-spania — home page",
@@ -34,7 +25,6 @@ window.ES_I18N.en = {
   "Nie udało się zmienić języka": "Couldn’t change the language",
   "Przeglądarka blokuje zapis ustawień. Spróbuj w zwykłym oknie.": "Your browser is blocking saved settings. Try a regular window.",
 
-  /* ---------- Stopka (wszystkie strony) ---------- */
   "Hotele w Barcelonie, Maladze i Madrycie. Spokojny rytm, jasne wnętrza i hiszpańskie światło.": "Hotels in Barcelona, Malaga and Madrid. A calm rhythm, bright interiors and Spanish light.",
   "Odkryj": "Explore",
   "Moje konto": "My account",
@@ -46,13 +36,11 @@ window.ES_I18N.en = {
   "Do góry": "Back to top",
   "Zamknij powiadomienie": "Close notification",
 
-  /* ---------- Liczebniki ---------- */
   "gość|gości|gości": ["guest", "guests"],
   "gościa|gości|gości": ["guest", "guests"],
   "dorosły|dorosłych|dorosłych": ["adult", "adults"],
   "noc|noce|nocy": ["night", "nights"],
 
-  /* ---------- Hero i wyszukiwanie pobytu ---------- */
   "Basen z turkusową mozaiką przed bielonym domem z kamiennym murem, kwitnącą bugenwillą i palmą": "Pool with a turquoise mosaic in front of a whitewashed house with a stone wall, flowering bougainvillea and a palm tree",
   "Sprawdź dostępność pobytu": "Check availability",
   "Wybierz hotel": "Choose a hotel",
@@ -89,7 +77,6 @@ window.ES_I18N.en = {
   "Dodano: {room}": "Added: {room}",
   "Wybierz daty przyjazdu i wyjazdu, a następnie kliknij „Sprawdź dostępność”.": "Choose your check-in and check-out dates, then click “Check availability”.",
 
-  /* ---------- Miasta (teksty z main.js i wersja barcelońska z HTML) ---------- */
   "Wyświetlasz hotel e-spania {loc}.": "You are viewing e-spania {city}.",
   "Odkryj hotel {loc}": "Discover the hotel in {city}",
   "Wybór pokoju · {city}": "Room selection · {city}",
@@ -100,7 +87,6 @@ window.ES_I18N.en = {
   "Wybierz daty i pokój — pokażemy, jak mógłby wyglądać Twój pobyt w Barcelonie.": "Choose your dates and room — we’ll show you what your stay in Barcelona could look like.",
   "Jeden dzień w Barcelonie — od poranka do późnego wieczoru. Wycieczki z przewodnikiem dodasz do pobytu przy rezerwacji.": "One day in Barcelona — from morning to late evening. You can add guided tours to your stay when booking.",
 
-  // Barcelona
   "Barcelona, gdzie miasto": "Barcelona, where the city",
   "spotyka morze": "meets the sea",
   "we własnym tempie": "at your own pace",
@@ -122,7 +108,6 @@ window.ES_I18N.en = {
   "Wąska, mokra od deszczu uliczka Dzielnicy Gotyckiej prowadząca do oświetlonej wieży katedry": "Narrow, rain-wet lane in the Gothic Quarter leading to the illuminated cathedral tower",
   "Zatoka z łodziami żaglowymi o zachodzie słońca": "Bay with sailing boats at sunset",
 
-  // Malaga
   "Malaga w rytmie": "Malaga to the rhythm of",
   "andaluzyjskiego słońca": "the Andalusian sun",
   "Andaluzyjski dzień": "An Andalusian day",
@@ -144,7 +129,6 @@ window.ES_I18N.en = {
   "Spacer do latarni La Farola i na plażę La Malagueta, gdy upał już odpuszcza.": "A walk to La Farola lighthouse and La Malagueta beach once the heat eases.",
   "Biała latarnia La Farola i palmy nad wodą portu w Maladze": "White La Farola lighthouse and palm trees by the harbour water in Malaga",
 
-  // Madryt
   "Madryt, stolica": "Madrid, the capital",
   "sztuki i późnych wieczorów": "of art and late evenings",
   "Spokojna baza": "A calm base",
@@ -167,11 +151,9 @@ window.ES_I18N.en = {
   "Arkady i ceglane kamienice Plaza Mayor w Madrycie, pod nimi spacerowicze": "Arcades and brick buildings of Plaza Mayor in Madrid with people strolling beneath",
   "Dachy Madrytu i kopuła budynku Metropolis przy Gran Vía o zachodzie słońca": "Madrid rooftops and the dome of the Metropolis building on Gran Vía at sunset",
 
-  /* ---------- Hotel ---------- */
   "Bielona fasada z drewnianymi okiennicami i palmą na tle błękitnego nieba": "Whitewashed façade with wooden shutters and a palm tree against a blue sky",
   "Patio z drzewkami cytrynowymi w terakotowych donicach": "Patio with lemon trees in terracotta pots",
 
-  /* ---------- Pokoje ---------- */
   "02 — Pokoje": "02 — Rooms",
   "Cztery sposoby na": "Four ways to",
   "dobry sen": "sleep well",
@@ -205,7 +187,6 @@ window.ES_I18N.en = {
   "Prywatny balkon, najwięcej przestrzeni i wieczory, które kończą się dopiero po zachodzie słońca.": "A private balcony, the most space and evenings that end only after sunset.",
   "balkon": "balcony",
 
-  /* ---------- Panel wyboru pokoi ---------- */
   "Pokoje i suity": "Rooms and suites",
   "Wybierz pokój, a dodamy go do wyszukiwania.": "Choose a room and we’ll add it to your search.",
   "{stay}. Wybierz pokój, a dodamy go do wyszukiwania.": "{stay}. Choose a room and we’ll add it to your search.",
@@ -214,7 +195,6 @@ window.ES_I18N.en = {
   "Wybrano": "Selected",
   "Cena za pokój za noc. Dodatki i wycieczki wybierzesz w następnym kroku.": "Price per room per night. You’ll choose extras and tours in the next step.",
 
-  /* ---------- Doświadczenia ---------- */
   "03 — Doświadczenia": "03 — Experiences",
   "Dni, które": "Days that",
   "same się układają": "fall into place",
@@ -222,7 +202,6 @@ window.ES_I18N.en = {
   "Popołudnie": "Afternoon",
   "Wieczór": "Evening",
 
-  /* ---------- Galeria ---------- */
   "04 — Galeria": "04 — Gallery",
   "Hiszpania": "Spain",
   "w detalach": "in detail",
@@ -238,7 +217,6 @@ window.ES_I18N.en = {
   "Poprzednie zdjęcie": "Previous photo",
   "Następne zdjęcie": "Next photo",
 
-  /* ---------- Opinie ---------- */
   "05 — Opinie": "05 — Reviews",
   "Głosy": "Guest",
   "gości": "voices",
@@ -253,7 +231,6 @@ window.ES_I18N.en = {
   "Malaga, październik 2026": "Malaga, October 2026",
   "Madryt, sierpień 2026": "Madrid, August 2026",
 
-  /* ---------- Blog — najnowsze wpisy ---------- */
   "Przed podróżą do": "Before your trip to",
   "Hiszpanii": "Spain",
   "Praktyczne porady dla osób, które planują wyjazd: kiedy jechać, co zjeść, co zwiedzić i jak odnaleźć się w hiszpańskim rytmie dnia.": "Practical tips for planning your trip: when to go, what to eat, what to see and how to settle into the Spanish rhythm of the day.",
@@ -275,7 +252,6 @@ window.ES_I18N.en = {
   ": Andaluzja w tydzień": ": Andalusia in a week",
   "Wszystkie wpisy na blogu": "All blog posts",
 
-  /* ---------- Sklep — wyróżnione produkty ---------- */
   "07 — Sklep": "07 — Shop",
   "Hiszpania, którą": "A piece of Spain",
   "zabierzesz do domu": "to take home",
@@ -302,12 +278,10 @@ window.ES_I18N.en = {
   "Zobacz": "View",
   "Wszystkie produkty": "All products",
 
-  /* ---------- Końcowe CTA ---------- */
   "Twój pobyt": "Your stay",
   "Zostań, aż zajdzie": "Stay until",
   "słońce": "the sun sets",
 
-  /* ---------- Etap 2: Wspólne elementy sklepu ---------- */
   "Strona główna": "Home",
   "breadcrumb": "breadcrumb",
   "Nawigacja okruszkowa": "Breadcrumb",
@@ -328,7 +302,6 @@ window.ES_I18N.en = {
   "4,6": "4.6",
   "5,0": "5.0",
 
-  /* ---------- Etap 2: Sklep (sklep.html) ---------- */
   "Sklep hotelowy — ceramika, ręczniki, świece i vouchery | e-spania": "Hotel shop — ceramics, towels, candles and vouchers | e-spania",
   "Stos złożonych ręczników w piaskowe i granatowe pasy": "Stack of folded towels with sand and navy stripes",
   "Sklep:": "Shop:",
@@ -369,7 +342,6 @@ window.ES_I18N.en = {
   "Poprzednia strona": "Previous page",
   "Następna strona": "Next page",
 
-  /* ---------- Etap 2: Produkty (shop-data.js i karty w HTML) ---------- */
   "Oliwa z oliwek Arbequina": "Arbequina olive oil",
   ": Oliwa z oliwek Arbequina": ": Arbequina olive oil",
   "Zestaw upominkowy Regalo": "Regalo gift set",
@@ -410,7 +382,6 @@ window.ES_I18N.en = {
   "Dwa ręcznie malowane talerze w kolorach południa. Każdy powstaje osobno, więc nigdy nie dostaniesz dwóch identycznych.": "Two hand-painted plates in the colours of the south. Each is made individually, so you’ll never get two identical ones.",
   "Sol powstają w rodzinnej pracowni ceramicznej, która maluje je pędzlem na surowym szkliwie. Świetnie wyglądają zarówno na stole, jak i na ścianie, a szkliwo jest bezpieczne w kontakcie z żywnością.": "Sol plates are made in a family-run ceramics workshop that paints them by brush onto raw glaze. They look great on the table or on the wall, and the glaze is food safe.",
 
-  /* ---------- Etap 2: Parametry i warianty produktów ---------- */
   "Materiał": "Material",
   "Wymiary": "Dimensions",
   "Gramatura": "Weight",
@@ -492,7 +463,6 @@ window.ES_I18N.en = {
   "Słońce i terakota": "Sun and terracotta",
   "Morze i oliwka": "Sea and olive",
 
-  /* ---------- Etap 2: Karta produktu (produkt.html) ---------- */
   "{name} — sklep hotelowy | e-spania": "{name} — hotel shop | e-spania",
   "Ręcznik plażowy Costa — sklep hotelowy | e-spania": "Costa beach towel — hotel shop | e-spania",
   "Pokaż zdjęcie {n} z {total}": "Show photo {n} of {total}",
@@ -530,7 +500,6 @@ window.ES_I18N.en = {
   "Kolory są intensywniejsze niż na zdjęciu. Wiszą u nas w kuchni.": "The colours are more vivid than in the photo. They hang in our kitchen.",
   "Ładne rzemiosło, a różnice między talerzami dodają im uroku.": "Nice craftsmanship, and the differences between the plates add to their charm.",
 
-  /* ---------- Etap 2: Koszyk (koszyk.html) ---------- */
   "Koszyk | Sklep e-spania": "Cart | e-spania shop",
   "Koszyk": "Cart",
   "Twój": "Your",
@@ -559,7 +528,6 @@ window.ES_I18N.en = {
   "Kod {code} aktywny: rabat {percent}% na produkty.": "Code {code} applied: {percent}% off products.",
   "Ten kod jest nieprawidłowy lub stracił ważność.": "This code is invalid or has expired.",
 
-  /* ---------- Etap 2: Kasa (zamowienie.html) ---------- */
   "Kasa — dane i dostawa | Sklep e-spania": "Checkout — details and delivery | e-spania shop",
   "Kasa": "Checkout",
   "Sprawdź formularz": "Please check the form",
@@ -616,7 +584,6 @@ window.ES_I18N.en = {
   "Zamówienie: {count}": "Order: {count}",
   "pozycja|pozycje|pozycji": ["item", "items"],
 
-  /* ---------- Etap 2: Rezerwacja (rezerwacja.html) ---------- */
   "Rezerwacja pobytu — pokój, dodatki i wycieczki | e-spania": "Book your stay — room, extras and tours | e-spania",
   "Zaplanuj": "Plan",
   "swój pobyt": "your stay",
@@ -697,7 +664,6 @@ window.ES_I18N.en = {
   "8 godzin": "8 hours",
   "10 godzin": "10 hours",
 
-  /* ---------- Etap 2: Płatność (platnosc.html) ---------- */
   "Płatność | e-spania": "Payment | e-spania",
   "Płatność": "Payment",
   "Nie ma nic do opłacenia. Wybierz pobyt lub produkty, a wrócisz tu na końcu.": "There’s nothing to pay for. Choose a stay or products and you’ll come back here at the end.",
@@ -720,7 +686,6 @@ window.ES_I18N.en = {
   "Wróć": "Back",
   "Przetwarzanie płatności…": "Processing payment…",
 
-  /* ---------- Etap 2: Konto (konto.html) ---------- */
   "Moje konto — rezerwacje i zamówienia | e-spania": "My account — bookings and orders | e-spania",
   "Moje": "My",
   "konto": "account",
@@ -782,7 +747,6 @@ window.ES_I18N.en = {
   "Rezerwacja {ref} jest opłacona. Szczegóły i odliczanie znajdziesz poniżej.": "Booking {ref} is paid. You’ll find the details and countdown below.",
   "Zamówienie {ref} jest opłacone i trafiło do realizacji.": "Order {ref} is paid and being processed.",
 
-  /* ---------- Etap 3: Archiwum bloga (blog.html, blog-2.html, blog-3.html) ---------- */
   "Blog o Hiszpanii — porady przed podróżą | e-spania": "Blog about Spain — tips before you travel | e-spania",
   "Blog o Hiszpanii — strona 2 z 3 | e-spania": "Blog about Spain — page 2 of 3 | e-spania",
   "Blog o Hiszpanii — strona 3 z 3 | e-spania": "Blog about Spain — page 3 of 3 | e-spania",
@@ -823,7 +787,6 @@ window.ES_I18N.en = {
   "Miniatura: spakowana walizka i kapelusz": "Thumbnail: a packed suitcase and a hat",
   "Co zabrać do Hiszpanii? Lista rzeczy do spakowania": "What to take to Spain? A packing list",
 
-  /* ---------- Etap 3: Karty wpisów ---------- */
   "Pusta, brukowana uliczka między kamienicami z balkonami w Madrycie": "Empty cobbled street between buildings with balconies in Madrid",
   "Sjesta w Hiszpanii: godziny otwarcia sklepów i rytm dnia": "Siesta in Spain: shop opening hours and the rhythm of the day",
   "W wielu hiszpańskich miastach życie zwalnia wczesnym popołudniem, a kolacja zaczyna się znacznie później niż w Polsce. Wyjaśniamy, jak zaplanować zakupy, posiłki i zwiedzanie, żeby nie trafić na zamknięte drzwi.": "In many Spanish towns life slows down in the early afternoon, and dinner starts much later than in Poland. We explain how to plan shopping, meals and sightseeing so you don’t end up at closed doors.",
@@ -873,7 +836,6 @@ window.ES_I18N.en = {
   "Hiszpania to bezpieczny kierunek, ale w zatłoczonych miejscach turystycznych zdarzają się kradzieże kieszonkowe. Zebraliśmy proste zasady, które pomogą zadbać o portfel, telefon i dokumenty.": "Spain is a safe destination, but pickpocketing happens in crowded tourist spots. We’ve gathered simple rules to help you look after your wallet, phone and documents.",
   ": Bezpieczeństwo w Hiszpanii": ": Safety in Spain",
 
-  /* ---------- Etap 3: Artykuł (single.html) ---------- */
   "Kiedy jechać do Hiszpanii? Pogoda i sezony | e-spania": "When to go to Spain? Weather and seasons | e-spania",
   "Kiedy jechać do Hiszpanii?": "When to go to Spain?",
   "Data publikacji": "Published",

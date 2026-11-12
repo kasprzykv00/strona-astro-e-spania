@@ -1,6 +1,3 @@
-// Kolekcje treści: wpisy na blogu i produkty w sklepie.
-// Każdy plik .md w podanym folderze to jeden wpis / jeden produkt.
-// Nazwa pliku (bez .md) staje się adresem, np. src/content/blog/tapas.md → /blog/tapas/
 import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
@@ -8,16 +5,15 @@ import { z } from 'astro/zod';
 const blog = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/blog' }),
   schema: z.object({
-    title: z.string(),                 // pełny tytuł (karta i nagłówek wpisu)
-    shortTitle: z.string(),            // krótki tytuł (okruszki, linki „Czytaj dalej”)
-    excerpt: z.string(),               // zajawka na karcie
+    title: z.string(),
+    shortTitle: z.string(),
+    excerpt: z.string(),
     category: z.string(),
     date: z.coerce.date(),
     author: z.enum(['oskar', 'krystian', 'dawid']),
-    image: z.string(),                 // zdjęcie karty 800×600 (ścieżka w folderze public)
+    image: z.string(),
     imageAlt: z.string(),
     tags: z.array(z.string()).default([]),
-    // pola opcjonalne
     seoTitle: z.string().optional(),
     description: z.string().optional(),
     readingTime: z.string().optional(),

@@ -1,6 +1,4 @@
 ---
-// Archiwum bloga z podziałem na strony: /blog/, /blog/2/, /blog/3/ ...
-// Wpisy biorą się z plików src/content/blog/*.md — nowy plik = nowa karta na liście.
 import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import PostCard from '../../components/PostCard.astro';
@@ -12,7 +10,7 @@ import { authors } from '../../data/authors.js';
 
 export async function getStaticPaths({ paginate }) {
   const posts = (await getCollection('blog')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
-  return paginate(posts, { pageSize: 6 });   // 6 wpisów na stronę
+  return paginate(posts, { pageSize: 6 });
 }
 
 const { page } = Astro.props;
@@ -20,7 +18,6 @@ const n = page.currentPage;
 const total = page.lastPage;
 const pageUrl = (i) => (i === 1 ? 'blog/' : `blog/${i}/`);
 
-// Opisy kolejnych stron archiwum (strona 1 ma własny tekst niżej)
 const PAGE_TEXT = {
   2: 'Starsze wpisy z archiwum bloga: Barcelona, paella, Kanary zimą, flamenco, transport i Madryt.',
   3: 'Starsze wpisy z archiwum bloga: hiszpańskie wina, Majorka poza plażą i bezpieczeństwo w miastach.',
@@ -35,7 +32,6 @@ const description = n === 1
   ? 'Blog o Hiszpanii dla turystów: kiedy jechać, co zjeść, co zwiedzić w Andaluzji i co spakować. Praktyczne porady, które pomogą zaplanować wyjazd do Hiszpanii.'
   : `Blog o Hiszpanii, strona ${n}: ${shortTitles} — porady dla turystów przed wyjazdem.`;
 
-// Dane strukturalne (dla wyszukiwarek)
 const schema = {
   '@context': 'https://schema.org',
   '@graph': [
@@ -86,7 +82,6 @@ const schema = {
     <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)}></script>
   </Fragment>
 
-  <!-- ===================== NAGŁÓWEK PODSTRONY ===================== -->
   <section class="page-header" aria-labelledby="page-title">
     <img class="page-header__image" src={url('assets/images/blog/blog-header-960.webp')} srcset={`${url('assets/images/blog/blog-header-960.webp')} 960w, ${url('assets/images/blog/blog-header-1920.webp')} 1920w`} sizes="100vw" width="1920" height="1080" fetchpriority="high" alt="Widok na białe domy dzielnicy Albaicín w Granadzie przez zdobiony łuk Alhambry">
     <div class="page-header__shade" aria-hidden="true"></div>
@@ -107,7 +102,6 @@ const schema = {
     </div>
   </section>
 
-  <!-- ===================== WPISY + PASEK BOCZNY ===================== -->
   <div class="container blog-layout">
     <div class="row gx-lg-5 gy-5">
 
@@ -120,7 +114,6 @@ const schema = {
           ))}
         </div>
 
-        <!-- Paginacja archiwum -->
         {total > 1 && (
           <nav aria-label="Strony archiwum wpisów">
             <ul class="pagination blog-pagination justify-content-center">
