@@ -356,7 +356,7 @@
       name: product.name, sku: product.sku, description: product.lead, category: product.categoryLabel,
       image: product.images.map((image) => absolute(image.src)),
       aggregateRating: { '@type': 'AggregateRating', ratingValue: product.rating, reviewCount: product.reviewsCount },
-      offers: { '@type': 'Offer', price: String(product.price), priceCurrency: 'PLN', availability: `https://schema.org/${product.inStock ? 'InStock' : 'PreOrder'}`, url: absolute(productUrl(product.id)) },
+      offers: { '@type': 'Offer', price: String(product.price), priceCurrency: 'PLN', availability: `https://schema.org/${product.inStock ? 'InStock' : 'MadeToOrder'}`, url: absolute(productUrl(product.id)) },
     });
     qs('#productSchema').textContent = JSON.stringify(schema);
   }

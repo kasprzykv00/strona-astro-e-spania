@@ -1,0 +1,231 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Toast from '../components/Toast.astro';
+import { url, abs } from '../utils/url.js';
+import { company, fullAddress } from '../data/company.js';
+
+const description = 'Kontakt z e-spania: dane firmy, telefon, e-mail i formularz kontaktowy. Biuro obsługi gości odpowiada od poniedziałku do soboty.';
+const { lat, lng } = company.geo;
+const mapSrc = `https://www.openstreetmap.org/export/embed.html?bbox=${lng - 0.012}%2C${lat - 0.007}%2C${lng + 0.012}%2C${lat + 0.007}&layer=mapnik&marker=${lat}%2C${lng}`;
+const mapLink = `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}#map=16/${lat}/${lng}`;
+
+const postalAddress = {
+  '@type': 'PostalAddress',
+  streetAddress: company.address.street,
+  postalCode: company.address.postalCode,
+  addressLocality: company.address.city,
+  addressCountry: company.address.countryCode,
+};
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'ContactPage',
+      name: 'Kontakt — e-spania',
+      description,
+      url: abs('kontakt/'),
+      inLanguage: 'pl',
+      about: { '@id': `${abs()}#e-spania` },
+    },
+    {
+      '@type': 'Organization',
+      '@id': `${abs()}#e-spania`,
+      name: company.brand,
+      legalName: company.legalName,
+      taxID: company.nif,
+      url: abs(),
+      logo: abs('assets/logo/logo-dark.png'),
+      email: company.email,
+      telephone: company.phone,
+      address: postalAddress,
+      sameAs: company.social.map((s) => s.href),
+      contactPoint: ['Obsługa klienta', 'Współpraca', 'Reklamacje'].map((contactType) => ({
+        '@type': 'ContactPoint',
+        contactType,
+        email: company.email,
+        telephone: company.phone,
+        availableLanguage: ['pl', 'en', 'es'],
+      })),
+    },
+    {
+      '@type': 'Hotel',
+      '@id': `${abs()}#hotel-barcelona`,
+      name: 'e-spania Barcelona',
+      image: abs('assets/images/og-image.jpg'),
+      address: postalAddress,
+      geo: { '@type': 'GeoCoordinates', latitude: lat, longitude: lng },
+      telephone: company.phone,
+      email: company.email,
+      priceRange: '420–980 zł',
+      url: abs(),
+      parentOrganization: { '@id': `${abs()}#e-spania` },
+      openingHoursSpecification: company.hours.schema.map((h) => ({
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: h.days,
+        opens: h.opens,
+        closes: h.closes,
+      })),
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Strona główna', item: abs() },
+        { '@type': 'ListItem', position: 2, name: 'Kontakt', item: abs('kontakt/') },
+      ],
+    },
+  ],
+};
+---
+<Layout title="Kontakt — telefon, e-mail i formularz | e-spania" page="kontakt">
+  <Fragment slot="head">
+    <meta name="description" content={description}>
+
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="pl_PL">
+    <meta property="og:site_name" content="e-spania">
+    <meta property="og:title" content="Kontakt — e-spania">
+    <meta property="og:description" content={description}>
+    <meta property="og:url" content={abs('kontakt/')}>
+    <meta property="og:image" content={abs('assets/images/og-image.jpg')}>
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Basen przed bielonym domem z kwitnącą bugenwillą">
+
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)}></script>
+  </Fragment>
+
+  <section class="page-header page-header--plain" aria-labelledby="page-title">
+    <div class="container page-header__inner">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb blog-breadcrumb">
+          <li class="breadcrumb-item"><a href={url()}>Strona główna</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Kontakt</li>
+        </ol>
+      </nav>
+      <h1 class="page-header__title" id="page-title">Porozmawiajmy o <em>Twoim pobycie</em></h1>
+      <p class="page-header__text">{company.hours.text}</p>
+    </div>
+  </section>
+
+  <div class="container shop-layout">
+    <div class="row gx-lg-5 gy-5">
+      <main class="col-12 col-lg-7" id="main">
+        <section class="contact-block" aria-labelledby="company-title">
+          <h2 class="contact-block__title" id="company-title">Dane firmy</h2>
+          <div class="row g-4">
+            <div class="col-12 col-sm-6">
+              <address class="contact-card">
+                <strong class="contact-card__name">{company.legalName}</strong>
+                <span>NIF (odpowiednik NIP): {company.nif}</span>
+                <span>{company.address.street}</span>
+                <span>{company.address.postalCode} {company.address.city}, {company.address.country}</span>
+              </address>
+            </div>
+            <div class="col-12 col-sm-6">
+              <ul class="contact-links">
+                <li>
+                  <a class="contact-link" href={`mailto:${company.email}`}>
+                    <i class="bi bi-envelope" aria-hidden="true"></i>
+                    <span><span class="contact-link__label">E-mail</span>{company.email}</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="contact-link" href={company.phoneHref}>
+                    <i class="bi bi-telephone" aria-hidden="true"></i>
+                    <span><span class="contact-link__label">Telefon</span>{company.phone}</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <h3 class="contact-block__subtitle">Nasze hotele</h3>
+          <ul class="contact-hotels">
+            {company.hotels.map((hotel) => (
+              <li><strong>{hotel.city}</strong> · {hotel.street}, {hotel.postalCode} {hotel.locality}</li>
+            ))}
+          </ul>
+        </section>
+
+        <section class="contact-block" aria-labelledby="form-title">
+          <h2 class="contact-block__title" id="form-title">Napisz do nas</h2>
+          <p class="contact-block__lead">Odpowiadamy w ciągu jednego dnia roboczego. Pola oznaczone gwiazdką są wymagane.</p>
+          <form class="shop-form contact-form" novalidate data-demo-form data-demo-title="Wiadomość wysłana" data-demo-text="Dziękujemy! Odpowiemy w ciągu jednego dnia roboczego.">
+            <div class="row g-3">
+              <div class="col-12 col-md-6">
+                <label class="form-label" for="contactName">Imię i nazwisko *</label>
+                <input class="form-control" type="text" id="contactName" name="name" required autocomplete="name" minlength="3">
+                <div class="invalid-feedback">Podaj imię i nazwisko.</div>
+              </div>
+              <div class="col-12 col-md-6">
+                <label class="form-label" for="contactEmail">Adres e-mail *</label>
+                <input class="form-control" type="email" id="contactEmail" name="email" required autocomplete="email">
+                <div class="invalid-feedback">Podaj poprawny adres e-mail.</div>
+              </div>
+              <div class="col-12 col-md-6">
+                <label class="form-label" for="contactPhone">Telefon</label>
+                <input class="form-control" type="tel" id="contactPhone" name="phone" autocomplete="tel" inputmode="tel" pattern="[0-9 +()\-]{9,}" aria-describedby="contactPhoneHint">
+                <div class="form-text" id="contactPhoneHint">Opcjonalnie — oddzwonimy, jeśli wolisz rozmowę.</div>
+                <div class="invalid-feedback">Wpisz co najmniej 9 cyfr.</div>
+              </div>
+              <div class="col-12 col-md-6">
+                <label class="form-label" for="contactDept">Dział *</label>
+                <select class="form-select" id="contactDept" name="department" required>
+                  <option value="" selected disabled>Wybierz dział</option>
+                  <option value="obsluga">Obsługa klienta</option>
+                  <option value="rezerwacje">Rezerwacje</option>
+                  <option value="wspolpraca">Współpraca</option>
+                  <option value="reklamacje">Reklamacje</option>
+                </select>
+                <div class="invalid-feedback">Wybierz dział.</div>
+              </div>
+              <div class="col-12">
+                <label class="form-label" for="contactMessage">Wiadomość *</label>
+                <textarea class="form-control" id="contactMessage" name="message" rows="6" required minlength="10"></textarea>
+                <div class="invalid-feedback">Napisz wiadomość (min. 10 znaków).</div>
+              </div>
+              <div class="col-12">
+                <div class="form-check shop-check">
+                  <input class="form-check-input" type="checkbox" id="contactConsent" name="consent" required>
+                  <label class="form-check-label" for="contactConsent">Wyrażam zgodę na przetwarzanie moich danych w celu odpowiedzi na wiadomość, zgodnie z <a href={url('polityka-prywatnosci/')}>polityką prywatności</a>. *</label>
+                  <div class="invalid-feedback">Zgoda jest potrzebna, żebyśmy mogli odpowiedzieć.</div>
+                </div>
+              </div>
+              <div class="col-12">
+                <button class="btn btn-accent" type="submit">Wyślij wiadomość</button>
+              </div>
+            </div>
+          </form>
+        </section>
+      </main>
+
+      <aside class="col-12 col-lg-5" aria-labelledby="map-title">
+        <div class="contact-aside">
+          <h2 class="contact-block__title" id="map-title">Jak do nas dojechać</h2>
+          <div class="ratio ratio-4x3 contact-map">
+            <iframe src={mapSrc} title={`Mapa dojazdu do hotelu e-spania Barcelona — ${fullAddress}`} loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+          </div>
+          <p class="contact-map__link">
+            <a class="link-arrow" href={mapLink} target="_blank" rel="noopener">Otwórz większą mapę<span class="visually-hidden"> (otwiera się w nowej karcie)</span></a>
+          </p>
+
+          <h3 class="contact-block__subtitle">Komunikacja miejska</h3>
+          <ul class="contact-directions">
+            <li><i class="bi bi-train-front" aria-hidden="true"></i><span><strong>Metro:</strong> linia L4 (żółta), stacja Barceloneta — 5 minut pieszo.</span></li>
+            <li><i class="bi bi-bus-front" aria-hidden="true"></i><span><strong>Autobus:</strong> linie V15 i 59, przystanek Pla de Palau — 3 minuty pieszo.</span></li>
+            <li><i class="bi bi-airplane" aria-hidden="true"></i><span><strong>Z lotniska:</strong> Aerobús do Plaça de Catalunya, dalej metro L4 — ok. 45 minut.</span></li>
+          </ul>
+
+          <h3 class="contact-block__subtitle">Parking</h3>
+          <ul class="contact-directions">
+            <li><i class="bi bi-p-square" aria-hidden="true"></i><span>Parking podziemny Pla de Palau, 150 m od hotelu. Goście hotelu płacą 22 € za dobę — zapytaj w recepcji o kartę rabatową.</span></li>
+            <li><i class="bi bi-bicycle" aria-hidden="true"></i><span>Stojaki rowerowe na dziedzińcu oraz stacja Bicing tuż przy wejściu.</span></li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <Toast slot="po-stopce" />
+</Layout>

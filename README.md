@@ -24,7 +24,7 @@ W repozytorium: **Settings → Pages → Source: GitHub Actions**.
 src/
   components/
     Header.astro        nagłówek (logo, menu, język, konto, koszyk)
-    Footer.astro        stopka
+    Footer.astro        stopka (4 kolumny: marka, nawigacja, strefa klienta, newsletter i kontakt)
     PostCard.astro      karta wpisu na blogu
     ProductCard.astro   karta produktu
     Stars.astro         gwiazdki oceny
@@ -38,6 +38,7 @@ src/
     products/*.md       produkty w sklepie (1 plik = 1 produkt)
   content.config.ts     jakie pola mają wpisy i produkty
   data/authors.js       autorzy wpisów
+  data/company.js       dane firmy (nazwa, NIF, adres, e-mail, telefon) — jedno źródło dla stopki, kontaktu i JSON-LD
   pages/
     index.astro         strona główna
     blog/[...page].astro  archiwum bloga z podziałem na strony (/blog/, /blog/2/…)
@@ -45,6 +46,9 @@ src/
     sklep/index.astro     katalog sklepu
     sklep/[id].astro      karta produktu (/sklep/costa/)
     koszyk, zamowienie, platnosc, rezerwacja, konto  — pozostałe podstrony
+    kontakt.astro         kontakt: dane firmy, formularz, mapa dojazdu
+    polityka-prywatnosci.astro  polityka prywatności i cookies
+    404.astro             strona błędu 404 z wyszukiwarką (GitHub Pages serwuje ją jako 404.html)
   utils/
     url.js              adresy z uwzględnieniem nazwy repozytorium (base)
     format.js           ceny, daty, oceny

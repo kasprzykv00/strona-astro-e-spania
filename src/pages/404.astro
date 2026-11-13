@@ -1,0 +1,140 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import Toast from '../components/Toast.astro';
+import { url, abs } from '../utils/url.js';
+
+const description = 'Nie znaleziono strony w serwisie e-spania. Skorzystaj z wyszukiwarki albo wróć do strony głównej, sklepu lub kontaktu.';
+
+// Indeks wyszukiwarki budowany w trakcie `astro build` — zawsze aktualny względem treści serwisu.
+const pages = [
+  { title: 'Strona główna — hotele w Barcelonie, Maladze i Madrycie', href: url(), type: 'Strona', text: 'hotel pokoje rezerwacja barcelona malaga madryt' },
+  { title: 'O nas — hotel', href: url('#hotel'), type: 'Strona', text: 'o nas hotel' },
+  { title: 'Pokoje i suity', href: url('#pokoje'), type: 'Strona', text: 'oferta pokoje classic deluxe junior suite' },
+  { title: 'Rezerwacja pobytu', href: url('rezerwacja/'), type: 'Strona', text: 'rezerwacja termin pobyt' },
+  { title: 'Blog', href: url('blog/'), type: 'Strona', text: 'blog porady podróż' },
+  { title: 'Sklep hotelowy', href: url('sklep/'), type: 'Strona', text: 'sklep produkty' },
+  { title: 'Koszyk', href: url('koszyk/'), type: 'Strona', text: 'koszyk zamówienie' },
+  { title: 'Moje konto', href: url('konto/'), type: 'Strona', text: 'konto logowanie zamówienia rezerwacje' },
+  { title: 'Kontakt', href: url('kontakt/'), type: 'Strona', text: 'kontakt telefon email mapa dojazd' },
+  { title: 'Polityka prywatności', href: url('polityka-prywatnosci/'), type: 'Strona', text: 'polityka prywatności rodo cookies' },
+];
+const posts = (await getCollection('blog')).map((p) => ({
+  title: p.data.title,
+  href: url(`blog/${p.id}/`),
+  type: 'Blog',
+  text: [p.data.category, p.data.excerpt, ...p.data.tags].join(' '),
+}));
+const products = (await getCollection('products')).map((p) => ({
+  title: p.data.name,
+  href: url(`sklep/${p.id}/`),
+  type: 'Sklep',
+  text: `${p.data.categoryLabel} ${p.data.lead}`,
+}));
+const searchIndex = [...pages, ...posts, ...products];
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  name: 'Nie znaleziono strony (404)',
+  description,
+  url: abs('404.html'),
+  inLanguage: 'pl',
+  isPartOf: { '@type': 'WebSite', name: 'e-spania', url: abs() },
+};
+---
+<Layout title="Nie znaleziono strony (404) | e-spania" page="404">
+  <Fragment slot="head">
+    <meta name="description" content={description}>
+    <meta name="robots" content="noindex, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="pl_PL">
+    <meta property="og:site_name" content="e-spania">
+    <meta property="og:title" content="Nie znaleziono strony — e-spania">
+    <meta property="og:description" content={description}>
+    <meta property="og:image" content={abs('assets/images/og-image.jpg')}>
+    <meta property="og:image:alt" content="Basen przed bielonym domem z kwitnącą bugenwillą">
+
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)}></script>
+  </Fragment>
+
+  <main id="main" class="error-page d-flex flex-column align-items-center justify-content-center text-center" style={`--error-bg: url('${url('assets/images/gal-lane.webp')}')`}>
+    <div class="container error-page__inner">
+      <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-8 col-xl-7 d-flex flex-column align-items-center">
+          <p class="error-page__code" aria-hidden="true">404</p>
+          <h1 class="error-page__title">Nie znaleziono strony</h1>
+          <p class="error-page__text">Strona, której szukasz, mogła zostać przeniesiona albo usunięta. Możliwe też, że w adresie wkradła się literówka — sprawdź go albo skorzystaj z wyszukiwarki poniżej.</p>
+
+          <form class="error-search w-100" id="errorSearch" role="search" action={url('blog/')} method="get" novalidate>
+            <label class="visually-hidden" for="errorSearchInput">Szukaj w serwisie</label>
+            <div class="input-group error-search__group">
+              <input class="form-control" type="search" id="errorSearchInput" name="q" placeholder="Szukaj: pokoje, tapas, ręczniki…" autocomplete="off" minlength="2" aria-describedby="errorSearchStatus">
+              <button class="btn btn-accent error-search__button" type="submit" aria-label="Szukaj"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg></button>
+            </div>
+            <p class="error-search__status" id="errorSearchStatus" aria-live="polite"></p>
+            <ul class="error-search__results" id="errorSearchResults" hidden></ul>
+          </form>
+
+          <nav class="error-page__actions d-flex flex-wrap justify-content-center gap-3" aria-label="Przydatne odnośniki">
+            <a class="btn btn-accent" href={url()}>Wróć do strony głównej</a>
+            <a class="btn btn-ghost" href={url('sklep/')}>Przejdź do sklepu</a>
+            <a class="btn btn-ghost" href={url('kontakt/')}>Skontaktuj się z nami</a>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <Toast slot="po-stopce" />
+
+  <script is:inline slot="po-stopce" define:vars={{ searchIndex }}>
+    (() => {
+      const form = document.getElementById('errorSearch');
+      const input = document.getElementById('errorSearchInput');
+      const status = document.getElementById('errorSearchStatus');
+      const list = document.getElementById('errorSearchResults');
+      const norm = (s) => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/ł/g, 'l');
+      const t = (text) => {
+        try {
+          const dict = (window.ES_I18N || {})[localStorage.getItem('es-lang')] || {};
+          return typeof dict[text] === 'string' ? dict[text] : text;
+        } catch (e) {
+          return text;
+        }
+      };
+      const items = searchIndex.map((item) => ({ ...item, haystack: norm(`${item.title} ${item.text}`) }));
+
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const query = norm(input.value.trim());
+        list.replaceChildren();
+        if (query.length < 2) {
+          list.hidden = true;
+          status.textContent = t('Wpisz co najmniej 2 znaki.');
+          input.focus();
+          return;
+        }
+        const words = query.split(/\s+/);
+        const found = items.filter((item) => words.every((w) => item.haystack.includes(w))).slice(0, 8);
+        found.forEach((item) => {
+          const li = document.createElement('li');
+          const a = document.createElement('a');
+          const tag = document.createElement('span');
+          a.className = 'error-search__link';
+          a.href = item.href;
+          tag.className = 'error-search__type';
+          tag.textContent = t(item.type);
+          a.append(tag, t(item.title));
+          li.append(a);
+          list.append(li);
+        });
+        list.hidden = found.length === 0;
+        status.textContent = found.length
+          ? t('Znaleziono wyników: {n}.').replace('{n}', found.length)
+          : t('Nic nie znaleźliśmy. Spróbuj innego słowa albo skorzystaj z przycisków poniżej.');
+      });
+    })();
+  </script>
+</Layout>

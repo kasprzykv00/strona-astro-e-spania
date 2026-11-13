@@ -223,10 +223,10 @@ const featuredProducts = (await getCollection('products'))
           <div class="col-lg-7 col-xl-6 order-lg-1">
             <div class="about__media">
               <figure class="about__figure about__figure--main media-frame" data-reveal="clip" data-parallax="0.05">
-                <img src={url('assets/images/about-house.webp')} width="900" height="1200" loading="lazy" decoding="async" alt="Bielona fasada z drewnianymi okiennicami i palmą na tle błękitnego nieba">
+                <img src={url('assets/images/about-house.webp')} srcset={`${url('assets/images/about-house-480.webp')} 480w, ${url('assets/images/about-house.webp')} 900w`} sizes="(min-width: 992px) 30vw, 78vw" width="900" height="1200" loading="lazy" decoding="async" alt="Bielona fasada z drewnianymi okiennicami i palmą na tle błękitnego nieba">
               </figure>
               <figure class="about__figure about__figure--accent media-frame" data-reveal="clip" data-parallax="-0.08">
-                <img src={url('assets/images/about-courtyard.webp')} width="800" height="1000" loading="lazy" decoding="async" alt="Patio z drzewkami cytrynowymi w terakotowych donicach">
+                <img src={url('assets/images/about-courtyard.webp')} srcset={`${url('assets/images/about-courtyard-400.webp')} 400w, ${url('assets/images/about-courtyard.webp')} 800w`} sizes="(min-width: 992px) 18vw, 48vw" width="800" height="1000" loading="lazy" decoding="async" alt="Patio z drzewkami cytrynowymi w terakotowych donicach">
               </figure>
             </div>
           </div>
@@ -250,7 +250,7 @@ const featuredProducts = (await getCollection('products'))
           <div class="col-md-6 col-lg-7">
             <article class="room-card" data-room-id="classic" data-room-capacity="2" data-reveal>
               <figure class="room-card__media media-frame" data-reveal="clip">
-                <img src={url('assets/images/room-classic.webp')} width="1200" height="900" loading="lazy" decoding="async" alt="Jasny pokój z podwójnym łóżkiem, białą pościelą i dekoracyjnymi kapeluszami na ścianie">
+                <img src={url('assets/images/room-classic.webp')} srcset={`${url('assets/images/room-classic-480.webp')} 480w, ${url('assets/images/room-classic-800.webp')} 800w, ${url('assets/images/room-classic.webp')} 1200w`} sizes="(min-width: 1200px) 34rem, (min-width: 768px) 50vw, 100vw" width="1200" height="900" loading="lazy" decoding="async" alt="Jasny pokój z podwójnym łóżkiem, białą pościelą i dekoracyjnymi kapeluszami na ścianie">
               </figure>
               <div class="room-card__body">
                 <span class="room-card__index" aria-hidden="true">01</span>
@@ -269,7 +269,7 @@ const featuredProducts = (await getCollection('products'))
           <div class="col-md-6 col-lg-5 rooms__offset">
             <article class="room-card" data-room-id="deluxe" data-room-capacity="2" data-reveal>
               <figure class="room-card__media room-card__media--tall media-frame" data-reveal="clip">
-                <img src={url('assets/images/room-deluxe.webp')} width="1200" height="900" loading="lazy" decoding="async" alt="Przestronny pokój z lnianą pościelą, rzeźbionym panelem nad łóżkiem i jutowym dywanem">
+                <img src={url('assets/images/room-deluxe.webp')} srcset={`${url('assets/images/room-deluxe-480.webp')} 480w, ${url('assets/images/room-deluxe-800.webp')} 800w, ${url('assets/images/room-deluxe.webp')} 1200w`} sizes="(min-width: 1200px) 34rem, (min-width: 768px) 50vw, 100vw" width="1200" height="900" loading="lazy" decoding="async" alt="Przestronny pokój z lnianą pościelą, rzeźbionym panelem nad łóżkiem i jutowym dywanem">
               </figure>
               <div class="room-card__body">
                 <span class="room-card__index" aria-hidden="true">02</span>
@@ -288,7 +288,7 @@ const featuredProducts = (await getCollection('products'))
           <div class="col-md-6 col-lg-5">
             <article class="room-card" data-room-id="junior" data-room-capacity="3" data-reveal>
               <figure class="room-card__media room-card__media--tall media-frame" data-reveal="clip">
-                <img src={url('assets/images/room-junior.webp')} width="1200" height="900" loading="lazy" decoding="async" alt="Sypialnia z łukowymi oknami wychodzącymi na zieleń i kutym żyrandolem">
+                <img src={url('assets/images/room-junior.webp')} srcset={`${url('assets/images/room-junior-480.webp')} 480w, ${url('assets/images/room-junior-800.webp')} 800w, ${url('assets/images/room-junior.webp')} 1200w`} sizes="(min-width: 1200px) 34rem, (min-width: 768px) 50vw, 100vw" width="1200" height="900" loading="lazy" decoding="async" alt="Sypialnia z łukowymi oknami wychodzącymi na zieleń i kutym żyrandolem">
               </figure>
               <div class="room-card__body">
                 <span class="room-card__index" aria-hidden="true">03</span>
@@ -307,7 +307,7 @@ const featuredProducts = (await getCollection('products'))
           <div class="col-md-6 col-lg-7 rooms__offset">
             <article class="room-card" data-room-id="suite" data-room-capacity="4" data-reveal>
               <figure class="room-card__media media-frame" data-reveal="clip">
-                <img src={url('assets/images/room-suite.webp')} width="1200" height="900" loading="lazy" decoding="async" alt="Otwarte drzwi balkonowe z widokiem na morze o zmierzchu">
+                <img src={url('assets/images/room-suite.webp')} srcset={`${url('assets/images/room-suite-480.webp')} 480w, ${url('assets/images/room-suite-800.webp')} 800w, ${url('assets/images/room-suite.webp')} 1200w`} sizes="(min-width: 1200px) 34rem, (min-width: 768px) 50vw, 100vw" width="1200" height="900" loading="lazy" decoding="async" alt="Otwarte drzwi balkonowe z widokiem na morze o zmierzchu">
               </figure>
               <div class="room-card__body">
                 <span class="room-card__index" aria-hidden="true">04</span>

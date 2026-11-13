@@ -35,7 +35,7 @@ const schema = {
       image: p.images.map((image) => abs(image.src)),
       brand: { '@type': 'Brand', name: 'e-spania' },
       aggregateRating: { '@type': 'AggregateRating', ratingValue: p.rating, reviewCount: p.reviewsCount },
-      offers: { '@type': 'Offer', price: String(p.price), priceCurrency: 'PLN', availability: `https://schema.org/${p.inStock ? 'InStock' : 'PreOrder'}`, url: abs(pageUrl) },
+      offers: { '@type': 'Offer', price: String(p.price), priceCurrency: 'PLN', availability: `https://schema.org/${p.inStock ? 'InStock' : 'MadeToOrder'}`, url: abs(pageUrl) },
     },
     {
       '@type': 'BreadcrumbList',

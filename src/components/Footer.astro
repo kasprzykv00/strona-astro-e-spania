@@ -1,46 +1,84 @@
 ---
-import { url, sekcja, isHome } from '../utils/url.js';
+import { url, sekcja } from '../utils/url.js';
+import { company } from '../data/company.js';
 
+// newsletter=false — wariant bez formularza (np. polityka prywatności, gdzie RWD_CW_6 wyklucza formularze).
+const { newsletter = true } = Astro.props;
 const path = Astro.url.pathname;
-const home = isHome(path);
+const current = (/** @type {string} */ target) => (path.replace(/\/$/, '') === url(target).replace(/\/$/, '') ? 'page' : undefined);
 ---
-<footer class="site-footer" id="kontakt">
+<footer class="site-footer" id="stopka">
   <div class="container">
-    <div class="row gy-5">
-      <div class="col-lg-4">
-        <img class="site-footer__logo" src={url('assets/logo/logo-light.png')} width="479" height="270" loading="lazy" alt="e-spania — es hotels">
+    <div class="row gy-5 gx-lg-5">
+      <section class="col-12 col-md-6 col-lg-3" aria-labelledby="footer-brand-title">
+        <h2 class="visually-hidden" id="footer-brand-title">O marce e-spania</h2>
+        <a class="site-footer__brand" href={url()} aria-label="e-spania — strona główna">
+          <img class="site-footer__logo" src={url('assets/logo/logo-light.png')} width="479" height="270" loading="lazy" alt="e-spania — es hotels">
+        </a>
         <p class="site-footer__claim">Hotele w Barcelonie, Maladze i Madrycie. Spokojny rytm, jasne wnętrza i hiszpańskie światło.</p>
-      </div>
-      <div class="col-6 col-md-4 col-lg-2 offset-lg-1">
-        <h2 class="site-footer__heading">Odkryj</h2>
-        <ul class="site-footer__list">
-          <li><a href={sekcja('hotel', path)}>Hotel</a></li>
-          <li><a href={sekcja('pokoje', path)}>Pokoje</a></li>
-          <li><a href={sekcja('doswiadczenia', path)}>Doświadczenia</a></li>
-          <li><a href={sekcja('galeria', path)}>Galeria</a></li>
-          <li><a href={sekcja('opinie', path)}>Opinie</a></li>
-          <li><a href={url('sklep/')}>Sklep</a></li>
-          <li><a href={url('konto/')}>Moje konto</a></li>
-          <li><a href={url('blog/')}>Blog</a></li>
+        <p class="site-footer__small">Prowadzimy kameralne hotele, w których liczy się dobry sen, lokalna kuchnia i czas bez pośpiechu.</p>
+        <ul class="site-footer__social">
+          {company.social.map((item) => (
+            <li>
+              <a class="site-footer__social-link" href={item.href} target="_blank" rel="noopener" aria-label={`${item.name} (otwiera się w nowej karcie)`}>
+                <i class={`bi ${item.icon}`} aria-hidden="true"></i>
+              </a>
+            </li>
+          ))}
         </ul>
-      </div>
-      <div class="col-6 col-md-4 col-lg-3">
-        <h2 class="site-footer__heading">Kontakt</h2>
-        <address class="site-footer__list site-footer__address">
-          <span data-city="address">Passeig de la Llum 12, 08003 Barcelona</span>
-          <a href="tel:+34900000123">+34&nbsp;900&nbsp;000&nbsp;123</a>
-          <a href="mailto:kontakt@e-spania.example">kontakt@e-spania.example</a>
-        </address>
-      </div>
-      <div class="col-md-4 col-lg-2">
-        <h2 class="site-footer__heading">Rezerwacja</h2>
-        <p class="site-footer__small">Sprawdź termin w kilka sekund.</p>
-        <a class="btn btn-ghost" href={sekcja('rezerwacja', path)} data-action={home ? 'focus-booking' : undefined}>Rezerwuj</a>
-      </div>
+      </section>
+
+      <nav class="col-6 col-md-3 col-lg-2 offset-lg-1" aria-labelledby="footer-nav-title">
+        <h2 class="site-footer__heading" id="footer-nav-title">Szybka nawigacja</h2>
+        <ul class="site-footer__list">
+          <li><a href={url()} aria-current={current('')}>Strona główna</a></li>
+          <li><a href={sekcja('hotel', path)}>O nas</a></li>
+          <li><a href={sekcja('pokoje', path)}>Oferta</a></li>
+          <li><a href={url('blog/')} aria-current={current('blog/')}>Blog</a></li>
+          <li><a href={url('kontakt/')} aria-current={current('kontakt/')}>Kontakt</a></li>
+        </ul>
+      </nav>
+
+      <nav class="col-6 col-md-3 col-lg-2" aria-labelledby="footer-shop-title">
+        <h2 class="site-footer__heading" id="footer-shop-title">Strefa klienta</h2>
+        <ul class="site-footer__list">
+          <li><a href={url('sklep/')} aria-current={current('sklep/')}>Sklep</a></li>
+          <li><a href={url('koszyk/')} aria-current={current('koszyk/')}>Koszyk</a></li>
+          <li><a href={url('konto/')} aria-current={current('konto/')}>Moje konto</a></li>
+          <li><a href={url('polityka-prywatnosci/')} aria-current={current('polityka-prywatnosci/')}>Polityka prywatności</a></li>
+        </ul>
+      </nav>
+
+      <section class="col-12 col-md-6 col-lg-4" aria-labelledby="footer-newsletter-title">
+        <h2 class="site-footer__heading" id="footer-newsletter-title">Newsletter i kontakt</h2>
+        {newsletter ? (
+          <form class="site-footer__newsletter" id="newsletter" novalidate data-demo-form data-demo-title="Dziękujemy za zapis" data-demo-text="Sprawdź skrzynkę — wysłaliśmy link potwierdzający subskrypcję.">
+            <label class="site-footer__label" for="newsletterEmail">Oferty i inspiracje raz w miesiącu</label>
+            <div class="input-group has-validation footer-input-group">
+              <input class="form-control" type="email" id="newsletterEmail" name="email" placeholder="twoj@email.pl" autocomplete="email" required aria-describedby="newsletterError">
+              <button class="btn btn-accent" type="submit">Zapisz się</button>
+              <div class="invalid-feedback" id="newsletterError">Podaj poprawny adres e-mail.</div>
+            </div>
+          </form>
+        ) : (
+          <p class="site-footer__small">
+            Oferty i inspiracje raz w miesiącu. <a class="site-footer__inline-link" href={url('kontakt/#newsletter')}>Zapisz się do newslettera</a>
+          </p>
+        )}
+        <ul class="site-footer__list site-footer__contact">
+          <li><a href={`mailto:${company.email}`}><i class="bi bi-envelope" aria-hidden="true"></i>{company.email}</a></li>
+          <li><a href={company.phoneHref}><i class="bi bi-telephone" aria-hidden="true"></i>Infolinia: {company.phone}</a></li>
+        </ul>
+      </section>
     </div>
-    <div class="site-footer__bottom d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
-      <p class="mb-0">© 2026 e-spania · Projekt na Responsive Web Design: Oskar Kasprzyk, Dawid Jajko, Krystian Jałocha</p>
-      <p class="mb-0">Zdjęcia: <a href="https://www.pexels.com/" target="_blank" rel="noopener">Pexels<span class="visually-hidden"> (otwiera się w nowej karcie)</span></a> · <a href={path} data-action="scroll-top">Do góry</a></p>
+
+    <div class="site-footer__bottom d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-2">
+      <p class="mb-0">© 2026 {company.legalName} · Projekt na Responsive Web Design: Oskar Kasprzyk, Dawid Jajko, Krystian Jałocha</p>
+      <p class="mb-0">
+        <a href={url('polityka-prywatnosci/')}>Polityka prywatności</a> ·
+        Zdjęcia: <a href="https://www.pexels.com/" target="_blank" rel="noopener">Pexels<span class="visually-hidden"> (otwiera się w nowej karcie)</span></a> ·
+        <a href="#main" data-action="scroll-top">Do góry</a>
+      </p>
     </div>
   </div>
 </footer>

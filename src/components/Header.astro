@@ -30,7 +30,7 @@ const cartCurrent = inSection('koszyk') || inSection('zamowienie') ? 'page' : un
             <li class="nav-item"><a class="nav-link site-menu__link" href={sekcja('doswiadczenia', path)}>Doświadczenia</a></li>
             <li class="nav-item"><a class="nav-link site-menu__link" href={sekcja('galeria', path)}>Galeria</a></li>
             <li class="nav-item"><a class="nav-link site-menu__link" href={sekcja('opinie', path)}>Opinie</a></li>
-            <li class="nav-item"><a class="nav-link site-menu__link" href="#kontakt">Kontakt</a></li>
+            <li class="nav-item"><a class="nav-link site-menu__link" href={url('kontakt/')} aria-current={current('kontakt')}>Kontakt</a></li>
             <li class="nav-item"><a class="nav-link site-menu__link site-menu__link--featured site-menu__link--divider" href={url('sklep/')} aria-current={current('sklep')}>Sklep</a></li>
             <li class="nav-item"><a class="nav-link site-menu__link site-menu__link--featured" href={url('blog/')} aria-current={current('blog')}>Blog</a></li>
           </ul>
